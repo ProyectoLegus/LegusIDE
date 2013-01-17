@@ -6,6 +6,9 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     ui(new Ui::VentanaPrincipal)
 {
     ui->setupUi(this);
+
+    /*Inicializacion*/
+    ui->barraSalida->setVisible(false);
 }
 
 VentanaPrincipal::~VentanaPrincipal()
