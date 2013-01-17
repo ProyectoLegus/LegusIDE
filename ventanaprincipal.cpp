@@ -9,6 +9,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
 
     /*Inicializacion*/
     ui->barraSalida->setVisible(false);
+    this->showMaximized();
 }
 
 VentanaPrincipal::~VentanaPrincipal()
