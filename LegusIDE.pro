@@ -11,8 +11,15 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        ventanaprincipal.cpp
+        ventanaprincipal.cpp \
+        ColoreadoDeCodigo.cpp \
+    Editor.cpp
 
-HEADERS  += VentanaPrincipal.h
+HEADERS  += VentanaPrincipal.h \
+        ColoreadoDeCodigo.h \
+    Editor.h
 
 FORMS    += VentanaPrincipal.ui
+
+RESOURCES += \
+    imagenes/iconos.qrc
