@@ -120,6 +120,40 @@ void Editor::closeEvent(QCloseEvent *evento)
     }
 }
 
+void Editor::keyPressEvent(QKeyEvent *e)
+{
+    if(e->key() == Qt::Key_Tab)
+    {
+        /*Codigo para tabular texto seleccionado*/
+        /*
+        QString textoSeleccionado = textCursor().selectedText();
+        if(!textoSeleccionado.isEmpty())
+        {
+            QStringList listaLineas = textoSeleccionado.split("\n");
+            QString textoFinal = "";
+            foreach( QString linea, listaLineas)
+            {
+                textoFinal += "\t";
+                textoFinal += linea;
+                textoFinal += "\n";
+            }
+            textCursor().insertText(textoFinal);
+
+        }
+        */
+        QPlainTextEdit::keyPressEvent(e);
+    }
+    else if( e->key() == Qt::Key_W && (e->modifiers() & Qt::ControlModifier==0))
+    {
+        QMessageBox::about(0,"","A punto de cerrar");
+        QPlainTextEdit::keyPressEvent(e);
+    }
+    else
+    {
+        QPlainTextEdit::keyPressEvent(e);
+    }
+}
+
 bool Editor::cargarArchivo(QString archivoACargar)
 {
     QFile archivo( archivoACargar );
@@ -162,6 +196,7 @@ bool Editor::guardarComo()
     {
         return false;
     }
+
     return guardarArchivo(nombreDelArchivo);
 }
 

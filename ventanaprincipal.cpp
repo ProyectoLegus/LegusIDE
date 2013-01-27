@@ -10,6 +10,8 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     qApp->setStyle(new QCleanlooksStyle());
     cargarConfiguraciones();
     this->showMaximized();
+
+    agregarVentana();
 }
 
 VentanaPrincipal::~VentanaPrincipal()
@@ -32,6 +34,7 @@ void VentanaPrincipal::cargarConfiguraciones()
     ui->areaMDI->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->areaMDI->setViewMode(QMdiArea::TabbedView);
     ui->areaMDI->setTabShape(QTabWidget::Rounded);
+    /*SetTabsClosable*/
 
     /*Inicializacion*/
     ui->panelBuscarYReemplazar->setVisible(false);
@@ -51,24 +54,60 @@ void VentanaPrincipal::keyPressEvent(QKeyEvent *evento)
     }
 }
 
+void VentanaPrincipal::closeEvent(QCloseEvent *evento)
+{
+    if( !cerrarVentanas() )
+    {
+        evento->accept();
+    }
+    else
+    {
+        evento->ignore();
+    }
+}
+
 void VentanaPrincipal::agregarVentana(QString archivo)
 {
     Editor *editor = new Editor();
     /*Agregar estilo*/
 
     editor->setAttribute(Qt::WA_DeleteOnClose);
-    new ColoreadoDeCodigo(editor->document());
-    ui->areaMDI->addSubWindow(editor);
 
     if( archivo.isEmpty() )
     {
+        new ColoreadoDeCodigo(editor->document());
         editor->nuevoArchivo();
     }
     else
     {
+        QRegExp rx("*.java");
+        rx.setPatternSyntax(QRegExp::Wildcard);
+        if( !archivo.contains(rx) )
+        {
+            new ColoreadoDeCodigo(editor->document());
+        }
+        else
+        {
+            new ColoreadoDeCodigoJava(editor->document());
+        }
         editor->cargarArchivo(archivo);
     }
+
+    ui->areaMDI->addSubWindow(editor);
     editor->show();
+}
+
+bool VentanaPrincipal::cerrarVentanas()
+{
+    bool resultado = false;
+    foreach( QMdiSubWindow *ventana, ui->areaMDI->subWindowList())
+    {
+        if(!ventana->close())
+        {
+            resultado = true;
+        }
+    }
+    return resultado;
 }
 
 void VentanaPrincipal::on_accionNuevo_Archivo_triggered()
@@ -100,9 +139,32 @@ void VentanaPrincipal::on_accionAbrir_Archivo_triggered()
 
 void VentanaPrincipal::on_accionCerrar_Archivo_triggered()
 {
-    if( ventanaActiva() && ventanaActiva()->close() )
+    if( ventanaActiva())
     {
-        ui->areaMDI->removeSubWindow(ui->areaMDI->currentSubWindow());
+        QString nombreArchivo = ventanaActiva()->obtenerNombreArchivo();
+        if(  ventanaActiva()->close()  )
+        {
+            ui->areaMDI->removeSubWindow(ui->areaMDI->currentSubWindow());
+        }
+
+        if( !nombreArchivo.isEmpty() )
+        {
+            ui->statusBar->showMessage(nombreArchivo,2500);
+        }
+    }
+}
+
+void VentanaPrincipal::on_accionCerrar_Todos_triggered()
+{
+    cerrarVentanas();
+}
+
+void VentanaPrincipal::on_accionGuardar_Todos_triggered()
+{
+    foreach( QMdiSubWindow *ventana, ui->areaMDI->subWindowList())
+    {
+        Editor *editor = qobject_cast<Editor*>(ventana->widget());
+        editor->guardar();
     }
 }
 
@@ -112,16 +174,18 @@ void VentanaPrincipal::on_accionSalir_triggered()
 }
 
 /********************************* OPCION DE MENU -> EDITAR ***********************/
-void VentanaPrincipal::on_accionDeshacer_triggered()
-{
-    Editor *ventana = ventanaActiva();
-    ventana->undo();
-}
 
 void VentanaPrincipal::on_actionAccionMostrarPanelBuscar_triggered()
 {
-    ui->panelBuscarYReemplazar->setVisible(true);
-    ui->txtTextoABuscar->setFocus();
+    if(ui->panelBuscarYReemplazar->isVisible())
+    {
+        ui->panelBuscarYReemplazar->setVisible(false);
+    }
+    else
+    {
+        ui->panelBuscarYReemplazar->setVisible(true);
+        ui->txtTextoABuscar->setFocus();
+    }
 }
 
 void VentanaPrincipal::on_btnCerrarBuscar_clicked()
@@ -135,7 +199,7 @@ void VentanaPrincipal::on_accionInsertar_Bloque_Si_triggered()
 {
     if( ventanaActiva() )
     {
-        ventanaActiva()->insertPlainText("Si /*Condicion*/ Entonces \n /*Bloque de Instrucciones*/ \nFin Si");
+        ventanaActiva()->insertPlainText("Si /*Condicion*/ Entonces \n /*Bloque de Instrucciones*/ \nFin Si\n");
     }
 }
 
@@ -143,7 +207,7 @@ void VentanaPrincipal::on_accionInsertar_Bloque_Para_triggered()
 {
     if( ventanaActiva() )
     {
-        ventanaActiva()->insertPlainText("Para /*Asignacion*/ hasta /*Literal Entera*/ ejecute \n /*Bloque de Instrucciones*/ \nFin Para");
+        ventanaActiva()->insertPlainText("Para /*Asignacion*/ hasta /*Literal Entera*/ ejecute \n /*Bloque de Instrucciones*/ \nFin Para\n");
     }
 }
 
@@ -151,7 +215,7 @@ void VentanaPrincipal::on_accionInsertar_Bloque_Caso_triggered()
 {
     if( ventanaActiva() )
     {
-        ventanaActiva()->insertPlainText("Caso /*Variable*/ Entonces \n /*Bloque de Instrucciones*/ \nFin Si");
+        ventanaActiva()->insertPlainText("Caso /*Variable*/ Entonces \n /*Bloque de Instrucciones*/ \nFin Si\n");
     }
 }
 
@@ -159,7 +223,7 @@ void VentanaPrincipal::on_accionInsertar_Bloque_Mientras_triggered()
 {
     if( ventanaActiva() )
     {
-        ventanaActiva()->insertPlainText("Mientras /*Condicion*/ Ejecute \n /*Bloque de Instrucciones*/ \nFin Mientras");
+        ventanaActiva()->insertPlainText("Mientras /*Condicion*/ Ejecute \n /*Bloque de Instrucciones*/ \nFin Mientras\n");
     }
 }
 
@@ -167,7 +231,7 @@ void VentanaPrincipal::on_accionInsertar_Bloque_Repetir_triggered()
 {
     if( ventanaActiva() )
     {
-        ventanaActiva()->insertPlainText("Repetir /*Literal Entera*/ Veces \n /*Bloque de Instrucciones*/ \nFin Repetir");
+        ventanaActiva()->insertPlainText("Repetir /*Literal Entera*/ Veces \n /*Bloque de Instrucciones*/ \nFin Repetir\n");
     }
 }
 
@@ -175,7 +239,7 @@ void VentanaPrincipal::on_accionInsertar_Bloque_Repita_triggered()
 {
     if( ventanaActiva() )
     {
-        ventanaActiva()->insertPlainText("Repita \n /*Bloque de Instrucciones*/ \nMientras /*Condicion*/ \nFin Repita");
+        ventanaActiva()->insertPlainText("Repita \n /*Bloque de Instrucciones*/ \nMientras /*Condicion*/ \nFin Repita\n");
     }
 }
 
@@ -183,7 +247,7 @@ void VentanaPrincipal::on_accionInsertar_Bloque_Repita_Desde_triggered()
 {
     if( ventanaActiva() )
     {
-        ventanaActiva()->insertPlainText("Repita Desde /*Literal Entera*/ Hasta /*Literal Entera*/ \n /*Bloque de Instrucciones*/ \nFin Repita Desde");
+        ventanaActiva()->insertPlainText("Repita Desde /*Literal Entera*/ Hasta /*Literal Entera*/ \n /*Bloque de Instrucciones*/ \nFin Repita Desde\n");
     }
 }
 
@@ -191,7 +255,7 @@ void VentanaPrincipal::on_accionInsertar_Bloque_Para_Cada_triggered()
 {
     if( ventanaActiva() )
     {
-        ventanaActiva()->insertPlainText("Para Cada /*Variable*/ En /*Variable Arreglo*/ Ejecute \n /*Bloque de Instrucciones*/ \nFin Para Cada");
+        ventanaActiva()->insertPlainText("Para Cada /*Variable*/ En /*Variable Arreglo*/ Ejecute \n /*Bloque de Instrucciones*/ \nFin Para Cada\n");
     }
 }
 
@@ -203,4 +267,18 @@ void VentanaPrincipal::on_accionInsertar_Bloque_Funcion_triggered()
 void VentanaPrincipal::on_accionInsertar_Bloque_Utilizar_triggered()
 {
     /*Que sea al principio del documento*/
+    if( ventanaActiva() )
+    {
+        ventanaActiva()->toPlainText().prepend("DAFUQQQQ");
+    }
+}
+
+void VentanaPrincipal::on_accionCompilar_triggered()
+{
+    ui->barraSalida->setVisible(true);
+}
+
+void VentanaPrincipal::on_accionBarra_de_Salida_triggered()
+{
+    ui->barraSalida->setVisible(true);
 }

@@ -27,6 +27,7 @@ public:
 protected:
     void resizeEvent(QResizeEvent *e);
     void closeEvent(QCloseEvent *);
+    void keyPressEvent(QKeyEvent *e);
 
 private slots:
     void actualizarAnchoDelAreaDeNumeroDeLinea(int cantidadBloque);

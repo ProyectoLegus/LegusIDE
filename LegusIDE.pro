@@ -13,13 +13,18 @@ TEMPLATE = app
 SOURCES += main.cpp\
         ventanaprincipal.cpp \
         ColoreadoDeCodigo.cpp \
-    Editor.cpp
+    Editor.cpp \
+    Bienvenida.cpp \
+    ColoreadoDeCodigoJava.cpp
 
 HEADERS  += VentanaPrincipal.h \
         ColoreadoDeCodigo.h \
-    Editor.h
+    Editor.h \
+    Bienvenida.h \
+    ColoreadoDecodigoJava.h
 
-FORMS    += VentanaPrincipal.ui
+FORMS    += VentanaPrincipal.ui \
+    Bienvenida.ui
 
 RESOURCES += \
     imagenes/iconos.qrc

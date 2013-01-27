@@ -310,6 +310,9 @@
     <property name="title">
      <string>Herramientas</string>
     </property>
+    <addaction name="accionBarra_de_Salida"/>
+    <addaction name="separator"/>
+    <addaction name="accionOpciones"/>
    </widget>
    <widget class="QMenu" name="menuAyuda">
     <property name="title">
@@ -335,6 +338,12 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="barraSalida">
+   <property name="features">
+    <set>QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Salida del Programa</string>
+   </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
@@ -406,30 +415,48 @@
    <property name="text">
     <string>Deshacer</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
   </action>
   <action name="accionRehacer">
    <property name="text">
     <string>Rehacer</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
    </property>
   </action>
   <action name="accionCortar">
    <property name="text">
     <string>Cortar</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
   </action>
   <action name="accionCopiar">
    <property name="text">
     <string>Copiar</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
    </property>
   </action>
   <action name="accionPegar">
    <property name="text">
     <string>Pegar</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
   </action>
   <action name="accionSeleccionar_Todo">
    <property name="text">
     <string>Seleccionar Todo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
    </property>
   </action>
   <action name="accionAvanzados">
@@ -523,6 +550,16 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="accionOpciones">
+   <property name="text">
+    <string>Opciones</string>
+   </property>
+  </action>
+  <action name="accionBarra_de_Salida">
+   <property name="text">
+    <string>Barra de Salida</string>
    </property>
   </action>
  </widget>

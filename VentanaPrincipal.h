@@ -4,6 +4,7 @@
 #include <QtGui>
 #include "Editor.h"
 #include "ColoreadoDeCodigo.h"
+#include "ColoreadoDecodigoJava.h"
 
 namespace Ui {
     class VentanaPrincipal;
@@ -22,9 +23,11 @@ private:
     void cargarConfiguraciones();
     void agregarVentana(QString archivo="");
     Editor* ventanaActiva();
+    bool cerrarVentanas();
 
 protected:
     void keyPressEvent(QKeyEvent *);
+    void closeEvent(QCloseEvent *);
 
 private slots:
     void on_accionNuevo_Archivo_triggered();
@@ -32,7 +35,6 @@ private slots:
     void on_accionAbrir_Archivo_triggered();
     void on_accionCerrar_Archivo_triggered();
     void on_accionSalir_triggered();
-    void on_accionDeshacer_triggered();
     void on_actionAccionMostrarPanelBuscar_triggered();
     void on_btnCerrarBuscar_clicked();
     void on_accionInsertar_Bloque_Si_triggered();
@@ -45,6 +47,10 @@ private slots:
     void on_accionInsertar_Bloque_Para_Cada_triggered();
     void on_accionInsertar_Bloque_Funcion_triggered();
     void on_accionInsertar_Bloque_Utilizar_triggered();
+    void on_accionCompilar_triggered();
+    void on_accionBarra_de_Salida_triggered();
+    void on_accionCerrar_Todos_triggered();
+    void on_accionGuardar_Todos_triggered();
 };
 
 #endif // VENTANAPRINCIPAL_H
