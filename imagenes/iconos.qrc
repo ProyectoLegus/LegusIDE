@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>cerrar.png</file>
+        <file>abrir_documento.png</file>
+        <file>abrir_documento_ide.png</file>
+        <file>nuevo_documento_ide.png</file>
+        <file>abrir_documento_java.png</file>
     </qresource>
 </RCC>

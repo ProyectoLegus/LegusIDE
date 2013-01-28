@@ -1,7 +1,7 @@
 #include "VentanaPrincipal.h"
 #include "ui_VentanaPrincipal.h"
 
-VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
+VentanaPrincipal::VentanaPrincipal(QString nombreArchivo, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VentanaPrincipal)
 {
@@ -11,7 +11,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     cargarConfiguraciones();
     this->showMaximized();
 
-    agregarVentana();
+    agregarVentana(nombreArchivo);
 }
 
 VentanaPrincipal::~VentanaPrincipal()
@@ -39,6 +39,18 @@ void VentanaPrincipal::cargarConfiguraciones()
     /*Inicializacion*/
     ui->panelBuscarYReemplazar->setVisible(false);
     ui->barraSalida->setVisible(false);
+
+    /*Agregar archivos Recientes*/
+    QSettings configuraciones("ArchivosRecientes.ini",QSettings::IniFormat);
+    QStringList archivosRecientes = configuraciones.value("ArchivosRecientes").toStringList();
+
+    for(int i=0; i<archivosRecientes.size(); i++)
+    {
+        QAction *accion = new QAction(this);
+        accion->setIconText(archivosRecientes.at(i));
+        ui->menuArchivos_Recientes->addAction(accion);
+        connect(accion, SIGNAL(triggered()), this, SLOT(accion_Abrir_Archivo_Reciente()));
+    }
 }
 
 /*********************+ MAIN WINDOW **************************+*/
@@ -134,6 +146,8 @@ void VentanaPrincipal::on_accionAbrir_Archivo_triggered()
         QMessageBox::critical(this,"Error", "Error al abrir el archivo");
         return;
     }
+
+    actualizarArchivosRecientes(archivo);
     agregarVentana(archivo);
 }
 
@@ -171,6 +185,56 @@ void VentanaPrincipal::on_accionGuardar_Todos_triggered()
 void VentanaPrincipal::on_accionSalir_triggered()
 {
     close();
+}
+
+void VentanaPrincipal::actualizarArchivosRecientes(QString archivo)
+{
+    QSettings configuraciones("ArchivosRecientes.ini",QSettings::IniFormat);
+
+    QStringList archivosRecientes = configuraciones.value("ArchivosRecientes").toStringList();
+    archivosRecientes.removeAll(archivo);
+    archivosRecientes.prepend(archivo);
+
+    while( archivosRecientes.size() > MAXIMO_ARCHIVOS_RECIENTES)
+    {
+        archivosRecientes.removeLast();
+    }
+
+    for(int i=0; i<archivosRecientes.size(); i++)
+    {
+        QAction *accion = new QAction(this);
+        accion->setIconText(archivosRecientes.at(i));
+        ui->menuArchivos_Recientes->addAction(accion);
+        connect(accion, SIGNAL(triggered()), this, SLOT(accion_Abrir_Archivo_Reciente()));
+    }
+
+    configuraciones.setValue("ArchivosRecientes", archivosRecientes);
+    configuraciones.sync();
+}
+
+void  VentanaPrincipal::accion_Abrir_Archivo_Reciente()
+{
+    QAction *accion = (QAction*)sender();
+
+    /*Revisar si ya esta abierto, si ya lo esta solo enfocar la ventana*/
+    QMdiSubWindow *ultimoEditor = 0;
+    foreach( QMdiSubWindow *ventana, ui->areaMDI->subWindowList())
+    {
+        Editor *editor = qobject_cast<Editor*>(ventana->widget());
+        if( editor->obtenerNombreArchivo().compare(accion->text())==0 )
+        {
+            ultimoEditor = ventana;
+        }
+    }
+
+    if( ultimoEditor == 0)
+    {
+        agregarVentana(accion->text());
+    }
+    else
+    {
+        ui->areaMDI->setActiveSubWindow(ultimoEditor);
+    }
 }
 
 /********************************* OPCION DE MENU -> EDITAR ***********************/
@@ -281,4 +345,21 @@ void VentanaPrincipal::on_accionCompilar_triggered()
 void VentanaPrincipal::on_accionBarra_de_Salida_triggered()
 {
     ui->barraSalida->setVisible(true);
+}
+
+void VentanaPrincipal::on_accionVista_a_la_Par_triggered()
+{
+    if( ui->areaMDI->subWindowList().size() < 2)
+    {
+        return;
+    }
+
+/*
+    ui->areaMDI->setViewMode(QMdiArea::SubWindowView);
+    QMdiSubWindow *ventana1 = ui->areaMDI->subWindowList().at(0);
+    QMdiSubWindow *ventana2 = ui->areaMDI->subWindowList().at(1);
+
+    ventana1->setGeometry( 0, 0, ui->areaMDI->x()/2,ui->areaMDI->y());
+    ventana2->setGeometry(ui->areaMDI->x()/2, 0, ui->areaMDI->x()/2, ui->areaMDI->y() );
+*/
 }

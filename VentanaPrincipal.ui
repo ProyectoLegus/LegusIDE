@@ -66,7 +66,7 @@
              </size>
             </property>
             <property name="text">
-             <string>&amp;Buscar        :</string>
+             <string>&amp;Buscar         :</string>
             </property>
             <property name="buddy">
              <cstring>txtTextoABuscar</cstring>
@@ -247,9 +247,14 @@
     <property name="title">
      <string>Archivo</string>
     </property>
+    <widget class="QMenu" name="menuArchivos_Recientes">
+     <property name="title">
+      <string>Archivos Recientes</string>
+     </property>
+    </widget>
     <addaction name="accionNuevo_Archivo"/>
     <addaction name="accionAbrir_Archivo"/>
-    <addaction name="accionArchivos_Recientes"/>
+    <addaction name="menuArchivos_Recientes"/>
     <addaction name="separator"/>
     <addaction name="accionGuardar_Archivo"/>
     <addaction name="accionGuardar_Como"/>
@@ -321,11 +326,18 @@
     <addaction name="accionAcerca_de_Legus"/>
     <addaction name="accionAcerca_Legus"/>
    </widget>
+   <widget class="QMenu" name="menuVista">
+    <property name="title">
+     <string>Vista</string>
+    </property>
+    <addaction name="accionVista_a_la_Par"/>
+   </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuEditar"/>
    <addaction name="menuPrograma"/>
    <addaction name="menuInsertar"/>
    <addaction name="menuHerramientas"/>
+   <addaction name="menuVista"/>
    <addaction name="menuAyuda"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -335,6 +347,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="accionNuevo_Archivo"/>
+   <addaction name="accionAbrir_Archivo"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="barraSalida">
@@ -350,6 +364,10 @@
    <widget class="QWidget" name="dockWidgetContents_2"/>
   </widget>
   <action name="accionNuevo_Archivo">
+   <property name="icon">
+    <iconset resource="imagenes/iconos.qrc">
+     <normaloff>:/nuevo_documento_ide.png</normaloff>:/nuevo_documento_ide.png</iconset>
+   </property>
    <property name="text">
     <string>Nuevo Archivo</string>
    </property>
@@ -358,16 +376,15 @@
    </property>
   </action>
   <action name="accionAbrir_Archivo">
+   <property name="icon">
+    <iconset resource="imagenes/iconos.qrc">
+     <normaloff>:/abrir_documento_ide.png</normaloff>:/abrir_documento_ide.png</iconset>
+   </property>
    <property name="text">
     <string>Abrir Archivo</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
-   </property>
-  </action>
-  <action name="accionArchivos_Recientes">
-   <property name="text">
-    <string>Archivos Recientes</string>
    </property>
   </action>
   <action name="accionGuardar_Archivo">
@@ -560,6 +577,11 @@
   <action name="accionBarra_de_Salida">
    <property name="text">
     <string>Barra de Salida</string>
+   </property>
+  </action>
+  <action name="accionVista_a_la_Par">
+   <property name="text">
+    <string>Vista a la Par</string>
    </property>
   </action>
  </widget>

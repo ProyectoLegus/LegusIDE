@@ -26,21 +26,27 @@
    <string>Bienvenido a Legus</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QListWidget" name="listaArchivosRecientes">
     <property name="geometry">
      <rect>
       <x>410</x>
       <y>30</y>
-      <width>211</width>
-      <height>381</height>
+      <width>200</width>
+      <height>360</height>
      </rect>
     </property>
+    <property name="minimumSize">
+     <size>
+      <width>200</width>
+      <height>360</height>
+     </size>
+    </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="btnAbrirArchivo">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>430</y>
+      <x>540</x>
+      <y>400</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -111,7 +117,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Crear Archivo</string>
+     <string>Abrir Legus IDE</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnManualLegus">
