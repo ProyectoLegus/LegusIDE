@@ -5,14 +5,21 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-//    VentanaPrincipal w;
-//    w.show();
 
-//    return a.exec();
+    QSettings configuraciones("ArchivoConfiguracion.ini",QSettings::IniFormat);
+    bool AbrirBievenida = configuraciones.value("AbrirBienvenida", true).value<bool>();
 
-
-    Bienvenida v;
-    v.show();
-
+    if( AbrirBievenida )
+    {
+        Bienvenida v;
+        v.show();
+        return a.exec();
+    }
+    else
+    {
+        VentanaPrincipal w;
+        w.show();
+        return a.exec();
+    }
     return a.exec();
 }

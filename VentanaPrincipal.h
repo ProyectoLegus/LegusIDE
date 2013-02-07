@@ -5,6 +5,8 @@
 #include "Editor.h"
 #include "ColoreadoDeCodigo.h"
 #include "ColoreadoDecodigoJava.h"
+#include "Configuraciones.h"
+#include "Bienvenida.h"
 #define MAXIMO_ARCHIVOS_RECIENTES 6
 
 namespace Ui {
@@ -55,6 +57,8 @@ private slots:
     void on_accionCerrar_Todos_triggered();
     void on_accionGuardar_Todos_triggered();
     void on_accionVista_a_la_Par_triggered();
+    void on_accionOpciones_triggered();
+    void on_txtTextoABuscar_returnPressed();
 };
 
 #endif // VENTANAPRINCIPAL_H

@@ -15,16 +15,19 @@ SOURCES += main.cpp\
         ColoreadoDeCodigo.cpp \
     Editor.cpp \
     Bienvenida.cpp \
-    ColoreadoDeCodigoJava.cpp
+    ColoreadoDeCodigoJava.cpp \
+    Configuraciones.cpp
 
 HEADERS  += VentanaPrincipal.h \
         ColoreadoDeCodigo.h \
     Editor.h \
     Bienvenida.h \
-    ColoreadoDecodigoJava.h
+    ColoreadoDecodigoJava.h \
+    Configuraciones.h
 
 FORMS    += VentanaPrincipal.ui \
-    Bienvenida.ui
+    Bienvenida.ui \
+    Configuraciones.ui
 
 RESOURCES += \
     imagenes/iconos.qrc

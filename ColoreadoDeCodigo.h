@@ -3,6 +3,8 @@
 
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
+#include <QSettings>
+#include <QBrush>
 
 QT_BEGIN_NAMESPACE
     class QTextDocument;
@@ -34,6 +36,9 @@ private:
     QTextCharFormat formatoComentarioMultilinea;
     QTextCharFormat formatoFunciones;
     QTextCharFormat formatoCadenas;
+    QTextCharFormat formatoNumeros;
+    QTextCharFormat formatoTiposDeDatos;
+    QTextCharFormat formatoParentesis;
 };
 
 #endif // RESALTADORDECODIGO_H

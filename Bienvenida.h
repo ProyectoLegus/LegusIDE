@@ -23,6 +23,12 @@ private slots:
 
     void on_listaArchivosRecientes_itemClicked(QListWidgetItem *item);
 
+    void on_chkAbrirVentana_stateChanged(int arg1);
+
+    void on_btnTutorialesLegus_clicked();
+
+    void on_btnAbrirOtroArchivo_clicked();
+
 private:
     Ui::Bienvenida *ui;
     void cargarConfiguraciones();

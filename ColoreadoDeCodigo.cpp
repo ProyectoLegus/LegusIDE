@@ -6,9 +6,14 @@ ColoreadoDeCodigo::ColoreadoDeCodigo(QTextDocument *padre)
 
     ReglaDeColoreado regla;
 
+    QSettings configuraciones("ConfiguracionDeColoreado", QSettings::IniFormat);
+
     /*Esto deberia ser jalado de un archivo de configuracion*/
-    formatoPalabraReservada.setForeground(Qt::darkBlue);
-    formatoPalabraReservada.setFontWeight(QFont::Bold);
+    QBrush colorTextoPalabraReservada = configuraciones.value("ColorTextoPalabraReservada",Qt::darkBlue).value<QBrush>();
+    int estiloPalabraReservada= configuraciones.value("EstiloPalabraReservada",QFont::Bold).value<int>();
+
+    formatoPalabraReservada.setForeground(colorTextoPalabraReservada);
+    formatoPalabraReservada.setFontWeight(estiloPalabraReservada);
 
     QStringList patronesDePalabrasReservadas;
 
@@ -31,10 +36,37 @@ ColoreadoDeCodigo::ColoreadoDeCodigo(QTextDocument *padre)
     }
 
     //Comentario
-    formatoComentarioMultilinea.setForeground(Qt::darkGreen);
-
+    QBrush brush = configuraciones.value("ColorComentario", Qt::darkGreen).value<QBrush>();
+    formatoComentarioMultilinea.setForeground(brush);
     inicioDeExpresionComentario = QRegExp("/\\*");
     finDeExpresionComentario = QRegExp("\\*/");
+
+    // Numeros
+    QBrush brushNumeros = configuraciones.value("ColorNumero",Qt::darkRed).value<QBrush>();
+    formatoNumeros.setForeground(brushNumeros);
+    regla.patron = QRegExp("\\b[0-9]+");
+    regla.formato = formatoNumeros;
+    reglasDeColoreado.append(regla);
+
+    // Cadenas
+    QBrush brushCadenas = configuraciones.value("ColorCadena",Qt::darkGreen).value<QBrush>();
+    formatoCadenas.setForeground(brushCadenas);
+    regla.patron = QRegExp("\".*\"");
+    regla.formato = formatoCadenas;
+    reglasDeColoreado.append(regla);
+
+    // Tipos de Dato
+
+
+    // Parentesis¿**?
+
+    // Funciones
+    QBrush brushFunciones = configuraciones.value("ColorFunciones", Qt::darkMagenta).value<QBrush>();
+    formatoFunciones.setForeground(brushFunciones);
+    formatoFunciones.setFontWeight(estiloPalabraReservada);
+    regla.formato = formatoFunciones;
+    regla.patron = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
+    reglasDeColoreado.append(regla);
 }
 
 void ColoreadoDeCodigo::highlightBlock(const QString &texto)

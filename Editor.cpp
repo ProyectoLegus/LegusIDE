@@ -17,6 +17,16 @@ Editor::Editor(QWidget *padre)
 
     /*Letra, deberia venir de configuracion*/
     setFont(QFont("courier",13));
+
+    QSettings configuraciones("ConfiguracionDeColoreado", QSettings::IniFormat);
+    QPalette p = palette();
+    QColor colorSeleccion = configuraciones.value("ColorSeleccion",QColor(Qt::blue).lighter(160)).value<QColor>();
+    p.setColor(QPalette::Highlight, colorSeleccion);
+    setPalette(p);
+
+    this->maxZoom = 500;
+    this->minZoom = 70;
+    this->zoomFont = 100;
 }
 
 int Editor::anchoDelAreaNumeroDeLinea()
@@ -56,6 +66,7 @@ void Editor::actualizarAreaDeNumeroDeLinea(const QRect &rect, int dy)
 
 void Editor::colorearLineaActual()
 {
+    QSettings configuraciones("ConfiguracionDeColoreado", QSettings::IniFormat);
     QList<QTextEdit::ExtraSelection> seleccionesExtra;
 
     if( !isReadOnly() )
@@ -63,8 +74,8 @@ void Editor::colorearLineaActual()
         QTextEdit::ExtraSelection seleccion;
 
         /*Desde QtSettings*/
-        QColor colorDeLinea = QColor(Qt::cyan).lighter(190);
-
+        QBrush colorLinea = configuraciones.value("ColorLineaActual",Qt::cyan).value<QBrush>();
+        QColor colorDeLinea = colorLinea.color().lighter(190);
         seleccion.format.setBackground(colorDeLinea);
         seleccion.format.setProperty(QTextFormat::FullWidthSelection, true);
         seleccion.cursor = textCursor();
@@ -75,20 +86,30 @@ void Editor::colorearLineaActual()
 }
 
 void Editor::areaNumeroDeLineaPaintEvent(QPaintEvent *evento)
-{
+{    
+    QSettings configuraciones("ConfiguracionDeColoreado", QSettings::IniFormat);
+
     QPainter painter(areaDeNumeroDeLinea);
-    painter.fillRect(evento->rect(), QColor(Qt::lightGray).lighter(120));
+
+    QBrush pincelArea = configuraciones.value("ColorAreaNumeroDeLinea", Qt::lightGray).value<QBrush>();
+    QColor colorArea = pincelArea.color().lighter(120);
+    painter.fillRect(evento->rect(), colorArea);
 
     QTextBlock block = firstVisibleBlock();
     int blockNumber = block.blockNumber();
     int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
     int bottom = top + (int) blockBoundingRect(block).height();
+
+    /*Color del Numero!*/
+    QBrush pincelTexto = configuraciones.value("ColorNumeroDeLinea",Qt::black).value<QBrush>();
+    QColor colorTexto = pincelTexto.color();
+
     while (block.isValid() && top <= evento->rect().bottom())
     {
         if (block.isVisible() && bottom >= evento->rect().top())
         {
             QString number = QString::number(blockNumber + 1);
-            painter.setPen(Qt::black);
+            painter.setPen(colorTexto);
             painter.drawText(0, top, areaDeNumeroDeLinea->width(), fontMetrics().height(),
                              Qt::AlignRight, number);
         }
@@ -124,6 +145,7 @@ void Editor::keyPressEvent(QKeyEvent *e)
 {
     if(e->key() == Qt::Key_Tab)
     {
+        textCursor().insertText("    ");
         /*Codigo para tabular texto seleccionado*/
         /*
         QString textoSeleccionado = textCursor().selectedText();
@@ -141,7 +163,7 @@ void Editor::keyPressEvent(QKeyEvent *e)
 
         }
         */
-        QPlainTextEdit::keyPressEvent(e);
+        //QPlainTextEdit::keyPressEvent(e);
     }
     else if( e->key() == Qt::Key_W && (e->modifiers() & Qt::ControlModifier==0))
     {
@@ -152,6 +174,24 @@ void Editor::keyPressEvent(QKeyEvent *e)
     {
         QPlainTextEdit::keyPressEvent(e);
     }
+}
+
+void Editor::keyReleaseEvent(QKeyEvent *e)
+{
+    /*Codigo para agregar ), " despues de ser digitados ( y "*/
+    /*if( e->key() == Qt::Key_ParenLeft)
+    {
+        int pos = textCursor().position();
+        textCursor().insertText(")");
+        textCursor().setPosition(pos);
+        e->accept();
+    }
+
+    if( e->key() == Qt::Key_QuoteDbl)
+    {
+        textCursor().insertText("\"");
+    }*/
+
 }
 
 bool Editor::cargarArchivo(QString archivoACargar)
@@ -274,4 +314,48 @@ void Editor::nuevoArchivo()
 
     connect(document(), SIGNAL(contentsChanged()),
             this, SLOT(documentoModificado()));
+}
+
+/*ZOOM*/
+int Editor::obtenerZoomFont()
+{
+    return this->zoomFont;
+}
+
+void Editor::establecerZoomFont(int zoomFont)
+{
+    if( zoomFont != this->zoomFont )
+    {
+        this->zoomFont = zoomFont;
+        QFont f = this->font();
+        int valor = 12 * this->zoomFont / 100;
+        f.setPointSize( valor );
+        setFont(f);
+        emit cambioZoomFont(this->zoomFont);
+    }
+}
+
+void Editor::zoomAdentro()
+{
+    int zoom = this->zoomFont + 10;
+    if( zoom > this->maxZoom )
+    {
+        zoom = this->maxZoom;
+    }
+    establecerZoomFont(zoom);
+}
+
+void Editor::zoomAfuera()
+{
+    int zoom = this->zoomFont - 10;
+    if( zoom < this->minZoom )
+    {
+        zoom = this->minZoom;
+    }
+    establecerZoomFont(zoom);
+}
+
+void Editor::zoomReinicializar()
+{
+    establecerZoomFont(100);
 }

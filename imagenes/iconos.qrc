@@ -1,9 +1,22 @@
 <RCC>
     <qresource prefix="/">
         <file>cerrar.png</file>
-        <file>abrir_documento.png</file>
         <file>abrir_documento_ide.png</file>
         <file>nuevo_documento_ide.png</file>
         <file>abrir_documento_java.png</file>
+        <file>abrir_documento.png</file>
+        <file>opciones.png</file>
+        <file>guardar.png</file>
+        <file>guardar_como.png</file>
+        <file>imprimir.png</file>
+        <file>deshacer.png</file>
+        <file>insertar_bloque.png</file>
+        <file>rehacer.png</file>
+        <file>copiar.png</file>
+        <file>cortar.png</file>
+        <file>pegar.png</file>
+        <file>ejecutar_nxt.png</file>
+        <file>ejecutar_pc.png</file>
+        <file>logo.png</file>
     </qresource>
 </RCC>

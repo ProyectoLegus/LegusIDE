@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <QPlainTextEdit>
 #include <QObject>
+#include <QSettings>
 
 class Editor : public QPlainTextEdit
 {
@@ -24,10 +25,19 @@ public:
     QString obtenerNombreArchivo();
     QString obtenerNombreAmigable();
 
+    int  obtenerZoomFont();
+    void establecerZoomFont(int);
+
+public slots:
+    void zoomAdentro();
+    void zoomAfuera();
+    void zoomReinicializar();
+
 protected:
     void resizeEvent(QResizeEvent *e);
     void closeEvent(QCloseEvent *);
     void keyPressEvent(QKeyEvent *e);
+    void keyReleaseEvent(QKeyEvent *e);
 
 private slots:
     void actualizarAnchoDelAreaDeNumeroDeLinea(int cantidadBloque);
@@ -39,11 +49,16 @@ private:
     QWidget *areaDeNumeroDeLinea;
     QString nombreArchivo;
     bool esSinTitulo;
+    int zoomFont;
+    int maxZoom;
+    int minZoom;
 
     void establecerArchivoActual(QString archivo);
     bool puedoGuardar();
     QString obtenerNombreArchivoCompleto(QString archivo);
 
+signals:
+    void cambioZoomFont(int);
 };
 
 class AreaNumeroDeLinea : public QWidget

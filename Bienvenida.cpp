@@ -30,7 +30,7 @@ void Bienvenida::cargarConfiguraciones()
     ui->listaArchivosRecientes->setMovement(QListWidget::Static);
     ui->listaArchivosRecientes->setIconSize(QSize(32,32));
 
-    QSettings configuraciones("ArchivosRecientes.ini",QSettings::IniFormat);
+    QSettings configuraciones("ArchivoConfiguracion.ini",QSettings::IniFormat);
     QStringList archivosRecientes = configuraciones.value("ArchivosRecientes").toStringList();
 
     for(int i=0; i<archivosRecientes.size(); i++)
@@ -52,6 +52,9 @@ void Bienvenida::cargarConfiguraciones()
         }
         ui->listaArchivosRecientes->addItem(elemento);
     }
+
+    bool AbrirBievenida = configuraciones.value("AbrirBienvenida", true).value<bool>();
+    ui->chkAbrirVentana->setChecked(AbrirBievenida);
 }
 
 void Bienvenida::on_listaArchivosRecientes_doubleClicked(const QModelIndex &index)
@@ -77,4 +80,31 @@ void Bienvenida::abrirArchivoSeleccionado()
 void Bienvenida::on_listaArchivosRecientes_itemClicked(QListWidgetItem *item)
 {
     ui->btnAbrirArchivo->setEnabled(true);
+}
+
+void Bienvenida::on_chkAbrirVentana_stateChanged(int arg1)
+{
+    QSettings configuraciones("ArchivoConfiguracion.ini",QSettings::IniFormat);
+    configuraciones.setValue("AbrirBienvenida", ui->chkAbrirVentana->isChecked());
+    configuraciones.sync();
+}
+
+void Bienvenida::on_btnTutorialesLegus_clicked()
+{
+    QDesktopServices::openUrl(QUrl("www.youtube.com/user/ProyectoLegus"));
+}
+
+void Bienvenida::on_btnAbrirOtroArchivo_clicked()
+{
+    QString archivo = QFileDialog::getOpenFileName(this, "Abrir Archivo",
+                                                   QDir::homePath(), tr("Archivos de Legus (*.legus *.java)"));
+
+    if( archivo.isEmpty() )
+    {
+        QMessageBox::critical(this,"Error", "Error al abrir el archivo");
+        return;
+    }
+
+    (new VentanaPrincipal( archivo ))->show();
+    this->close();
 }

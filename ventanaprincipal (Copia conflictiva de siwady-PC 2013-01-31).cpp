@@ -29,11 +29,10 @@ Editor* VentanaPrincipal::ventanaActiva()
 void VentanaPrincipal::cargarConfiguraciones()
 {
     /*Decoracion*/
-
     ui->areaMDI->setBackground(QBrush(Qt::white));
     ui->areaMDI->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->areaMDI->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    //ui->areaMDI->setViewMode(QMdiArea::TabbedView);
+    ui->areaMDI->setViewMode(QMdiArea::TabbedView);
     ui->areaMDI->setTabShape(QTabWidget::Rounded);
     /*SetTabsClosable*/
 
@@ -42,7 +41,7 @@ void VentanaPrincipal::cargarConfiguraciones()
     ui->barraSalida->setVisible(false);
 
     /*Agregar archivos Recientes*/
-    QSettings configuraciones("ArchivoConfiguracion.ini",QSettings::IniFormat);
+    QSettings configuraciones("ArchivosRecientes.ini",QSettings::IniFormat);
     QStringList archivosRecientes = configuraciones.value("ArchivosRecientes").toStringList();
 
     for(int i=0; i<archivosRecientes.size(); i++)
@@ -105,9 +104,8 @@ void VentanaPrincipal::agregarVentana(QString archivo)
         }
         editor->cargarArchivo(archivo);
     }
-    connect(ui->accionZoomAdentro,SIGNAL(triggered()), editor, SLOT(zoomAdentro()));
-    connect(ui->accionZoomAfuera, SIGNAL(triggered()), editor, SLOT(zoomAfuera()));
-    ui->areaMDI->addSubWindow(editor, Qt::SubWindow)->showMaximized();
+
+    ui->areaMDI->addSubWindow(editor);
     editor->show();
 }
 
@@ -191,7 +189,7 @@ void VentanaPrincipal::on_accionSalir_triggered()
 
 void VentanaPrincipal::actualizarArchivosRecientes(QString archivo)
 {
-    QSettings configuraciones("ArchivoConfiguracion.ini",QSettings::IniFormat);
+    QSettings configuraciones("ArchivosRecientes.ini",QSettings::IniFormat);
 
     QStringList archivosRecientes = configuraciones.value("ArchivosRecientes").toStringList();
     archivosRecientes.removeAll(archivo);
@@ -336,7 +334,7 @@ void VentanaPrincipal::on_accionInsertar_Bloque_Utilizar_triggered()
     if( ventanaActiva() )
     {
         ventanaActiva()->moveCursor(QTextCursor::Start);
-        ventanaActiva()->insertPlainText("Utilizar /*#Puerto*/ Como /*tTipo De Sensor*/ En /*Variable*/\n\n\n");
+        ventanaActiva()->insertPlainText("Utilizar /*#Puerto*/ Como /*tTipo De Sensor*/ En /*Variable*/\n");
     }
 }
 
@@ -366,67 +364,4 @@ void VentanaPrincipal::on_accionVista_a_la_Par_triggered()
     ventana1->setGeometry( 0, 0, ui->areaMDI->x()/2,ui->areaMDI->y());
     ventana2->setGeometry(ui->areaMDI->x()/2, 0, ui->areaMDI->x()/2, ui->areaMDI->y() );
 */
-}
-
-void VentanaPrincipal::on_accionOpciones_triggered()
-{
-    (new Configuraciones(0))->show();
-    //ui->areaMDI->setViewMode(QMdiArea::TabbedView);
-}
-
-void VentanaPrincipal::on_txtTextoABuscar_returnPressed()
-{
-    if( ventanaActiva() == 0)
-    {   /*Nada que hacer ninguna ventana esta activa*/
-        return;
-    }
-
-    bool usaExpresionRegular = ui->chkUsaExpresionRegular->isChecked();
-    QString texto = ui->txtTextoABuscar->text();
-
-    QTextCursor cursor;
-    if( !usaExpresionRegular)
-    {
-        cursor = ventanaActiva()->document()->find(texto, ventanaActiva()->textCursor());
-    }
-    else
-    {
-        QRegExp expr(texto);
-        if(ui->chkMayusMinusIgual->isChecked())
-        {
-            expr.setCaseSensitivity(Qt::CaseSensitive);
-        }
-        cursor = ventanaActiva()->document()->find(expr, ventanaActiva()->textCursor());
-    }
-
-    if( !cursor.isNull())
-    {
-        ventanaActiva()->setTextCursor(cursor);
-    }
-    else
-    {
-        if( !usaExpresionRegular )
-        {
-            cursor = ventanaActiva()->document()->find(texto, QTextCursor());
-        }
-        else
-        {
-            QRegExp expr(texto);
-            if(ui->chkMayusMinusIgual->isChecked())
-            {
-                expr.setCaseSensitivity(Qt::CaseSensitive);
-            }
-            cursor = ventanaActiva()->document()->find(expr, QTextCursor() );
-        }
-
-        if(!cursor.isNull())
-        {
-            ventanaActiva()->setTextCursor(cursor);
-        }
-        else
-        {
-            ventanaActiva()->textCursor().clearSelection();
-        }
-    }
-
 }

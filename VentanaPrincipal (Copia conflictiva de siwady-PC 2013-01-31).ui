@@ -13,10 +13,6 @@
   <property name="windowTitle">
    <string>VentanaPrincipal</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="imagenes/iconos.qrc">
-    <normaloff>:/logo.png</normaloff>:/logo.png</iconset>
-  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
@@ -70,7 +66,7 @@
              </size>
             </property>
             <property name="text">
-             <string>        &amp;Buscar:</string>
+             <string>&amp;Buscar         :</string>
             </property>
             <property name="buddy">
              <cstring>txtTextoABuscar</cstring>
@@ -94,21 +90,21 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="chkMayusMinusIgual">
+           <widget class="QCheckBox" name="chkMatchCase">
             <property name="text">
              <string>Match &amp;case</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="chkPalabraIgual">
+           <widget class="QCheckBox" name="chkMatchWord">
             <property name="text">
              <string>Match &amp;word</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="chkUsaExpresionRegular">
+           <widget class="QCheckBox" name="chkUseRegExp">
             <property name="text">
              <string>Reg e&amp;xp</string>
             </property>
@@ -121,7 +117,7 @@
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>30</width>
+              <width>40</width>
               <height>20</height>
              </size>
             </property>
@@ -180,12 +176,12 @@
              <string>&amp;Reemplazar:</string>
             </property>
             <property name="buddy">
-             <cstring>txtTextoAReemplazar</cstring>
+             <cstring>edtTextToReplace</cstring>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="txtTextoAReemplazar">
+           <widget class="QLineEdit" name="edtTextToReplace">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -201,7 +197,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="chkReemplazarSoloSeleccion">
+           <widget class="QCheckBox" name="chkReplaceSelectionOnly">
             <property name="text">
              <string>&amp;Selection only</string>
             </property>
@@ -335,8 +331,6 @@
      <string>Vista</string>
     </property>
     <addaction name="accionVista_a_la_Par"/>
-    <addaction name="accionZoomAdentro"/>
-    <addaction name="accionZoomAfuera"/>
    </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuEditar"/>
@@ -354,18 +348,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="accionNuevo_Archivo"/>
-   <addaction name="accionGuardar_Archivo"/>
-   <addaction name="accionGuardar_Como"/>
    <addaction name="accionAbrir_Archivo"/>
-   <addaction name="separator"/>
-   <addaction name="accionDeshacer"/>
-   <addaction name="accionRehacer"/>
-   <addaction name="accionCortar"/>
-   <addaction name="accionCopiar"/>
-   <addaction name="accionPegar"/>
-   <addaction name="separator"/>
-   <addaction name="accionEjecutar_en_NXT"/>
-   <addaction name="accionEjecutar_en_PC"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="barraSalida">
@@ -378,23 +361,7 @@
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2">
-    <layout class="QVBoxLayout" name="verticalLayout_3">
-     <item>
-      <widget class="QTextEdit" name="txtSalida">
-       <property name="autoFormatting">
-        <set>QTextEdit::AutoBulletList</set>
-       </property>
-       <property name="documentTitle">
-        <string>Salida</string>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+   <widget class="QWidget" name="dockWidgetContents_2"/>
   </widget>
   <action name="accionNuevo_Archivo">
    <property name="icon">
@@ -411,7 +378,7 @@
   <action name="accionAbrir_Archivo">
    <property name="icon">
     <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/abrir_documento.png</normaloff>:/abrir_documento.png</iconset>
+     <normaloff>:/abrir_documento_ide.png</normaloff>:/abrir_documento_ide.png</iconset>
    </property>
    <property name="text">
     <string>Abrir Archivo</string>
@@ -421,10 +388,6 @@
    </property>
   </action>
   <action name="accionGuardar_Archivo">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/guardar.png</normaloff>:/guardar.png</iconset>
-   </property>
    <property name="text">
     <string>Guardar Archivo</string>
    </property>
@@ -433,10 +396,6 @@
    </property>
   </action>
   <action name="accionGuardar_Como">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/guardar_como.png</normaloff>:/guardar_como.png</iconset>
-   </property>
    <property name="text">
     <string>Guardar Como</string>
    </property>
@@ -460,15 +419,8 @@
    </property>
   </action>
   <action name="accionImprimir">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/imprimir.png</normaloff>:/imprimir.png</iconset>
-   </property>
    <property name="text">
     <string>Imprimir</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+P</string>
    </property>
   </action>
   <action name="accionSalir">
@@ -477,10 +429,6 @@
    </property>
   </action>
   <action name="accionDeshacer">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/deshacer.png</normaloff>:/deshacer.png</iconset>
-   </property>
    <property name="text">
     <string>Deshacer</string>
    </property>
@@ -489,10 +437,6 @@
    </property>
   </action>
   <action name="accionRehacer">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/rehacer.png</normaloff>:/rehacer.png</iconset>
-   </property>
    <property name="text">
     <string>Rehacer</string>
    </property>
@@ -501,10 +445,6 @@
    </property>
   </action>
   <action name="accionCortar">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/cortar.png</normaloff>:/cortar.png</iconset>
-   </property>
    <property name="text">
     <string>Cortar</string>
    </property>
@@ -513,10 +453,6 @@
    </property>
   </action>
   <action name="accionCopiar">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/copiar.png</normaloff>:/copiar.png</iconset>
-   </property>
    <property name="text">
     <string>Copiar</string>
    </property>
@@ -525,10 +461,6 @@
    </property>
   </action>
   <action name="accionPegar">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/pegar.png</normaloff>:/pegar.png</iconset>
-   </property>
    <property name="text">
     <string>Pegar</string>
    </property>
@@ -560,109 +492,61 @@
    </property>
   </action>
   <action name="accionEjecutar_en_NXT">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/ejecutar_nxt.png</normaloff>:/ejecutar_nxt.png</iconset>
-   </property>
    <property name="text">
     <string>Ejecutar en NXT</string>
    </property>
   </action>
   <action name="accionEjecutar_en_PC">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/ejecutar_pc.png</normaloff>:/ejecutar_pc.png</iconset>
-   </property>
    <property name="text">
     <string>Ejecutar en PC</string>
    </property>
   </action>
   <action name="accionInsertar_Bloque_Si">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/insertar_bloque.png</normaloff>:/insertar_bloque.png</iconset>
-   </property>
    <property name="text">
     <string>Insertar Bloque Si</string>
    </property>
   </action>
   <action name="accionInsertar_Bloque_Para">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/insertar_bloque.png</normaloff>:/insertar_bloque.png</iconset>
-   </property>
    <property name="text">
     <string>Insertar Bloque Para</string>
    </property>
   </action>
   <action name="accionInsertar_Bloque_Caso">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/insertar_bloque.png</normaloff>:/insertar_bloque.png</iconset>
-   </property>
    <property name="text">
     <string>Insertar Bloque Caso</string>
    </property>
   </action>
   <action name="accionInsertar_Bloque_Mientras">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/insertar_bloque.png</normaloff>:/insertar_bloque.png</iconset>
-   </property>
    <property name="text">
     <string>Insertar Bloque Mientras</string>
    </property>
   </action>
   <action name="accionInsertar_Bloque_Repetir">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/insertar_bloque.png</normaloff>:/insertar_bloque.png</iconset>
-   </property>
    <property name="text">
     <string>Insertar Bloque Repetir</string>
    </property>
   </action>
   <action name="accionInsertar_Bloque_Repita">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/insertar_bloque.png</normaloff>:/insertar_bloque.png</iconset>
-   </property>
    <property name="text">
     <string>Insertar Bloque Repita</string>
    </property>
   </action>
   <action name="accionInsertar_Bloque_Repita_Desde">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/insertar_bloque.png</normaloff>:/insertar_bloque.png</iconset>
-   </property>
    <property name="text">
     <string>Insertar Bloque Repita Desde</string>
    </property>
   </action>
   <action name="accionInsertar_Bloque_Para_Cada">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/insertar_bloque.png</normaloff>:/insertar_bloque.png</iconset>
-   </property>
    <property name="text">
     <string>Insertar Bloque Para Cada</string>
    </property>
   </action>
   <action name="accionInsertar_Bloque_Funcion">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/insertar_bloque.png</normaloff>:/insertar_bloque.png</iconset>
-   </property>
    <property name="text">
     <string>Insertar Bloque Funcion</string>
    </property>
   </action>
   <action name="accionInsertar_Bloque_Utilizar">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/insertar_bloque.png</normaloff>:/insertar_bloque.png</iconset>
-   </property>
    <property name="text">
     <string>Insertar Bloque Utilizar</string>
    </property>
@@ -686,15 +570,8 @@
    </property>
   </action>
   <action name="accionOpciones">
-   <property name="icon">
-    <iconset resource="imagenes/iconos.qrc">
-     <normaloff>:/opciones.png</normaloff>:/opciones.png</iconset>
-   </property>
    <property name="text">
     <string>Opciones</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Shift+O</string>
    </property>
   </action>
   <action name="accionBarra_de_Salida">
@@ -705,22 +582,6 @@
   <action name="accionVista_a_la_Par">
    <property name="text">
     <string>Vista a la Par</string>
-   </property>
-  </action>
-  <action name="accionZoomAdentro">
-   <property name="text">
-    <string>Zoom +</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl++</string>
-   </property>
-  </action>
-  <action name="accionZoomAfuera">
-   <property name="text">
-    <string>Zoom -</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+-</string>
    </property>
   </action>
  </widget>
