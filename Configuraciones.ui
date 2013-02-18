@@ -52,7 +52,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="page">
     <widget class="QGroupBox" name="groupBox_3">
@@ -272,11 +272,24 @@
 }</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="btnForeground">
       <property name="geometry">
        <rect>
         <x>370</x>
         <y>30</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnBackground">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>70</y>
         <width>51</width>
         <height>31</height>
        </rect>

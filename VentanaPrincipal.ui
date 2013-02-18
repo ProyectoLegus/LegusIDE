@@ -370,7 +370,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="barraSalida">
    <property name="features">
-    <set>QDockWidget::DockWidgetMovable</set>
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
     <string>Salida del Programa</string>
@@ -567,6 +567,9 @@
    <property name="text">
     <string>Ejecutar en NXT</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
   </action>
   <action name="accionEjecutar_en_PC">
    <property name="icon">
@@ -575,6 +578,9 @@
    </property>
    <property name="text">
     <string>Ejecutar en PC</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+R</string>
    </property>
   </action>
   <action name="accionInsertar_Bloque_Si">

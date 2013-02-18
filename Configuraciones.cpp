@@ -102,3 +102,14 @@ void Configuraciones::on_checkBox_clicked()
 {
 
 }
+
+void Configuraciones::on_listaColoreado_itemClicked(QListWidgetItem *item)
+{
+    QPalette pBack = ui->btnBackground->palette();
+    pBack.setColor(ui->btnBackground->backgroundRole(), item->backgroundColor());
+    ui->btnBackground->setPalette(pBack);
+
+    QPalette pFore = ui->btnForeground->palette();
+    pFore.setColor(ui->btnForeground->foregroundRole(), item->foreground().color() );
+    ui->btnForeground->setPalette(pFore);
+}

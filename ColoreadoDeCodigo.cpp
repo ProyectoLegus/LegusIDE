@@ -58,7 +58,19 @@ ColoreadoDeCodigo::ColoreadoDeCodigo(QTextDocument *padre)
     // Tipos de Dato
 
 
-    // Parentesis¿**?
+    // Parentesis y Corchetes
+    QBrush brushParenCor = configuraciones.value("ColorParentesisCorchete",Qt::darkRed).value<QBrush>();
+    formatoParentesisCorchetes.setForeground(brushParenCor);
+    formatoParentesisCorchetes.setFontWeight(estiloPalabraReservada);
+    QStringList ParenCor;
+    ParenCor << "\\b(\\b" << "\\b)\\b"
+             <<"\\b[\\b"<<"\\b]\\b";
+    foreach(QString patron, ParenCor)
+    {
+        regla.formato = formatoParentesisCorchetes;
+        regla.patron = QRegExp(patron);
+        reglasDeColoreado.append(regla);
+    }
 
     // Funciones
     QBrush brushFunciones = configuraciones.value("ColorFunciones", Qt::darkMagenta).value<QBrush>();

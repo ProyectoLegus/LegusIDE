@@ -24,6 +24,8 @@ public:
 
     QString obtenerNombreArchivo();
     QString obtenerNombreAmigable();
+    QString obtenerNombreSinExtension();
+    QString obtenerFolder();
 
     int  obtenerZoomFont();
     void establecerZoomFont(int);

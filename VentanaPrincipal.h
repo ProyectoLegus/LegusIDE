@@ -13,6 +13,7 @@ namespace Ui {
     class VentanaPrincipal;
 }
 
+
 class VentanaPrincipal : public QMainWindow
 {
     Q_OBJECT
@@ -23,6 +24,10 @@ public:
 
 private:
     Ui::VentanaPrincipal *ui;
+    QProcess procesoCompilacion;
+    QProcess procesoEjecucion;
+    QString archivoAEjecutar;
+
     void cargarConfiguraciones();
     void agregarVentana(QString archivo="");
     Editor* ventanaActiva();
@@ -34,6 +39,12 @@ protected:
     void closeEvent(QCloseEvent *);
 
 private slots:
+    /*Propios*/
+    void salidaStandard();
+    void salidaStandardError();
+    void compilacionTerminada();
+
+    /*Acciones del UI*/
     void accion_Abrir_Archivo_Reciente();
     void on_accionNuevo_Archivo_triggered();
     void on_accionGuardar_Archivo_triggered();
@@ -59,6 +70,9 @@ private slots:
     void on_accionVista_a_la_Par_triggered();
     void on_accionOpciones_triggered();
     void on_txtTextoABuscar_returnPressed();
+    void on_accionEjecutar_en_NXT_triggered();
+    void on_accionEjecutar_en_PC_triggered();
 };
 
 #endif // VENTANAPRINCIPAL_H
+

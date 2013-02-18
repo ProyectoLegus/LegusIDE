@@ -65,6 +65,10 @@ void VentanaPrincipal::keyPressEvent(QKeyEvent *evento)
             ui->panelBuscarYReemplazar->setVisible(false);
         }
     }
+    else if( evento->key() == Qt::Key_F1)
+    {
+        ui->barraSalida->setVisible( !ui->barraSalida->isVisible() );
+    }
 }
 
 void VentanaPrincipal::closeEvent(QCloseEvent *evento)
@@ -429,4 +433,49 @@ void VentanaPrincipal::on_txtTextoABuscar_returnPressed()
         }
     }
 
+}
+
+/*Proceso de Compilacion*/
+void VentanaPrincipal::on_accionEjecutar_en_NXT_triggered()
+{
+    ui->barraSalida->setVisible(true);
+    if(ventanaActiva()==0){return;}
+
+    /*Agregar llamada al proceso de compilacion en NXT*/
+    QString path = QDir::currentPath();
+    //path += "/lejos/bin/nxjc.bat";
+    path += "compilacion_windows.bat";
+
+    QString archivo = ventanaActiva()->obtenerNombreArchivo();
+    procesoCompilacion.start(path, QStringList() << ventanaActiva()->obtenerFolder()
+                                                 << ventanaActiva()->obtenerNombreSinExtension()
+                                                 << ventanaActiva()->obtenerNombreAmigable());
+
+    connect(&procesoCompilacion, SIGNAL(readyReadStandardOutput()), this, SLOT(salidaStandard()));
+    connect(&procesoCompilacion, SIGNAL(readyReadStandardError()), this, SLOT(salidaStandardError()));
+    connect(&procesoCompilacion, SIGNAL(finished(int)), this, SLOT(compilacionTerminada()));
+
+    archivoAEjecutar = ventanaActiva()->obtenerNombreSinExtension();
+    ui->statusBar->showMessage("Compilando "+archivo, 2000);
+}
+
+void VentanaPrincipal::compilacionTerminada()
+{
+    ui->txtSalida->append("Compilacion Exitosa?");
+}
+
+void VentanaPrincipal::on_accionEjecutar_en_PC_triggered()
+{
+    ui->barraSalida->setVisible(true);
+    /*Agregar llamada al proceso de compilacion en PC*/
+}
+
+void VentanaPrincipal::salidaStandard()
+{
+    ui->txtSalida->append(procesoCompilacion.readAllStandardOutput());
+}
+
+void VentanaPrincipal::salidaStandardError()
+{
+    ui->txtSalida->append(procesoCompilacion.readAllStandardError());
 }

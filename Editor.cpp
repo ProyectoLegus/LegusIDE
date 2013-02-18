@@ -306,6 +306,16 @@ QString Editor::obtenerNombreArchivo()
     return this->nombreArchivo;
 }
 
+QString Editor::obtenerNombreSinExtension()
+{
+    return this->nombreArchivo.mid(0, nombreArchivo.lastIndexOf("."));
+}
+
+QString Editor::obtenerFolder()
+{
+    return this->nombreArchivo.mid(0, nombreArchivo.lastIndexOf("\\"));
+}
+
 void Editor::nuevoArchivo()
 {
     this->esSinTitulo = true;

@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QSettings>
 #include <QBrush>
+#include <QPalette>
+#include <QListWidgetItem>
 
 namespace Ui {
     class Configuraciones;
@@ -25,8 +27,8 @@ private slots:
     void on_btnAceptar_clicked();
     void on_btnAplicar_clicked();
     void aplicarConfiguraciones();
-
     void on_checkBox_clicked();
+    void on_listaColoreado_itemClicked(QListWidgetItem *item);
 
 private:
     Ui::Configuraciones *ui;

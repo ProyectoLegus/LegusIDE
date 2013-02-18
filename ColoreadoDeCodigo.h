@@ -38,7 +38,7 @@ private:
     QTextCharFormat formatoCadenas;
     QTextCharFormat formatoNumeros;
     QTextCharFormat formatoTiposDeDatos;
-    QTextCharFormat formatoParentesis;
+    QTextCharFormat formatoParentesisCorchetes;
 };
 
 #endif // RESALTADORDECODIGO_H
