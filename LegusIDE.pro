@@ -31,3 +31,6 @@ FORMS    += VentanaPrincipal.ui \
 
 RESOURCES += \
     imagenes/iconos.qrc
+
+OTHER_FILES += \
+    scripts/compilacion_windows.bat

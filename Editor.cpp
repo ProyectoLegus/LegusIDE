@@ -308,12 +308,13 @@ QString Editor::obtenerNombreArchivo()
 
 QString Editor::obtenerNombreSinExtension()
 {
-    return this->nombreArchivo.mid(0, nombreArchivo.lastIndexOf("."));
+    QString str = this->nombreArchivo.mid(0, nombreArchivo.lastIndexOf("."));
+    return str.mid(str.lastIndexOf("/")+1,str.length());
 }
 
 QString Editor::obtenerFolder()
 {
-    return this->nombreArchivo.mid(0, nombreArchivo.lastIndexOf("\\"));
+    return this->nombreArchivo.mid(0, nombreArchivo.lastIndexOf("/"));
 }
 
 void Editor::nuevoArchivo()

@@ -109,8 +109,15 @@ void VentanaPrincipal::agregarVentana(QString archivo)
         }
         editor->cargarArchivo(archivo);
     }
+    // CONENNE
     connect(ui->accionZoomAdentro,SIGNAL(triggered()), editor, SLOT(zoomAdentro()));
     connect(ui->accionZoomAfuera, SIGNAL(triggered()), editor, SLOT(zoomAfuera()));
+    connect(ui->accionDeshacer, SIGNAL(triggered()), editor, SLOT(undo()));
+    connect(ui->accionRehacer, SIGNAL(triggered()),editor, SLOT(redo()));
+    connect(ui->accionCopiar, SIGNAL(triggered()), editor, SLOT(copy()));
+    connect(ui->accionCortar, SIGNAL(triggered()), editor, SLOT(cut()));
+    connect(ui->accionPegar, SIGNAL(triggered()), editor, SLOT(paste()));
+
     ui->areaMDI->addSubWindow(editor, Qt::SubWindow)->showMaximized();
     editor->show();
 }
@@ -444,13 +451,14 @@ void VentanaPrincipal::on_accionEjecutar_en_NXT_triggered()
     /*Agregar llamada al proceso de compilacion en NXT*/
     QString path = QDir::currentPath();
     //path += "/lejos/bin/nxjc.bat";
-    path += "compilacion_windows.bat";
+    path += "/compilacion_windows.bat";
 
     QString archivo = ventanaActiva()->obtenerNombreArchivo();
-    procesoCompilacion.start(path, QStringList() << ventanaActiva()->obtenerFolder()
-                                                 << ventanaActiva()->obtenerNombreSinExtension()
-                                                 << ventanaActiva()->obtenerNombreAmigable());
+    QStringList argumentos = QStringList() << ventanaActiva()->obtenerFolder()
+                                           << ventanaActiva()->obtenerNombreAmigable()
+                                           << ventanaActiva()->obtenerNombreSinExtension();
 
+    procesoCompilacion.start(path, argumentos);
     connect(&procesoCompilacion, SIGNAL(readyReadStandardOutput()), this, SLOT(salidaStandard()));
     connect(&procesoCompilacion, SIGNAL(readyReadStandardError()), this, SLOT(salidaStandardError()));
     connect(&procesoCompilacion, SIGNAL(finished(int)), this, SLOT(compilacionTerminada()));
@@ -461,7 +469,7 @@ void VentanaPrincipal::on_accionEjecutar_en_NXT_triggered()
 
 void VentanaPrincipal::compilacionTerminada()
 {
-    ui->txtSalida->append("Compilacion Exitosa?");
+    //ui->txtSalida->append("Instalacion Exitosa!");
 }
 
 void VentanaPrincipal::on_accionEjecutar_en_PC_triggered()
@@ -479,3 +487,24 @@ void VentanaPrincipal::salidaStandardError()
 {
     ui->txtSalida->append(procesoCompilacion.readAllStandardError());
 }
+
+void VentanaPrincipal::on_accionPestania_triggered()
+{
+    ui->areaMDI->setViewMode(QMdiArea::TabbedView);
+}
+
+void VentanaPrincipal::on_accionCascada_triggered()
+{
+    ui->areaMDI->setViewMode(QMdiArea::SubWindowView);
+}
+
+void VentanaPrincipal::on_accionMaximizado_triggered()
+{
+    ui->areaMDI->setViewMode(QMdiArea::SubWindowView);
+    if(ventanaActiva()!=0)
+    {
+        ventanaActiva()->setWindowState(Qt::WindowMaximized);
+    }
+
+}
+

@@ -72,7 +72,9 @@ private slots:
     void on_txtTextoABuscar_returnPressed();
     void on_accionEjecutar_en_NXT_triggered();
     void on_accionEjecutar_en_PC_triggered();
+    void on_accionPestania_triggered();
+    void on_accionCascada_triggered();
+    void on_accionMaximizado_triggered();
 };
 
 #endif // VENTANAPRINCIPAL_H
-

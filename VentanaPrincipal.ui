@@ -334,9 +334,18 @@
     <property name="title">
      <string>Vista</string>
     </property>
+    <widget class="QMenu" name="menuVistas">
+     <property name="title">
+      <string>Vistas</string>
+     </property>
+     <addaction name="accionPestania"/>
+     <addaction name="accionMaximizado"/>
+     <addaction name="accionCascada"/>
+    </widget>
     <addaction name="accionVista_a_la_Par"/>
     <addaction name="accionZoomAdentro"/>
     <addaction name="accionZoomAfuera"/>
+    <addaction name="menuVistas"/>
    </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuEditar"/>
@@ -727,6 +736,26 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+-</string>
+   </property>
+  </action>
+  <action name="actionVista_con_Pesta_as">
+   <property name="text">
+    <string>Vista con Pestañas</string>
+   </property>
+  </action>
+  <action name="accionPestania">
+   <property name="text">
+    <string>Pestañas</string>
+   </property>
+  </action>
+  <action name="accionMaximizado">
+   <property name="text">
+    <string>Maximizado</string>
+   </property>
+  </action>
+  <action name="accionCascada">
+   <property name="text">
+    <string>Cascada</string>
    </property>
   </action>
  </widget>
