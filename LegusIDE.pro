@@ -30,7 +30,9 @@ FORMS    += VentanaPrincipal.ui \
     Configuraciones.ui
 
 RESOURCES += \
-    imagenes/iconos.qrc
+    imagenes/iconos.qrc \
+    autocompletacion/autocompletacion.qrc
 
 OTHER_FILES += \
-    scripts/compilacion_windows.bat
+    scripts/compilacion_windows.bat \
+    autocompletacion/palabras_incorporadas.txt

@@ -118,6 +118,14 @@ void VentanaPrincipal::agregarVentana(QString archivo)
     connect(ui->accionCortar, SIGNAL(triggered()), editor, SLOT(cut()));
     connect(ui->accionPegar, SIGNAL(triggered()), editor, SLOT(paste()));
 
+    // Intellisense 0__0
+    QCompleter *completador = new QCompleter(this);
+    completador->setModel(obtenerModeloDeArchivo(":/autocompletacion/palabras_incorporadas.txt", completador));
+    completador->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+    completador->setCaseSensitivity(Qt::CaseInsensitive);
+    completador->setWrapAround(false);
+    editor->establecerCompletador(completador);
+
     ui->areaMDI->addSubWindow(editor, Qt::SubWindow)->showMaximized();
     editor->show();
 }
@@ -508,3 +516,23 @@ void VentanaPrincipal::on_accionMaximizado_triggered()
 
 }
 
+QAbstractItemModel* VentanaPrincipal::obtenerModeloDeArchivo(QString nomArchivo, QCompleter *completador)
+{
+    QFile archivo(nomArchivo);
+    if( !archivo.open(QFile::ReadOnly))
+    {
+        return new QStringListModel(completador);
+    }
+
+    QStringList palabras;
+    while( !archivo.atEnd())
+    {
+        QByteArray linea = archivo.readLine();
+        if( !linea.isEmpty())
+        {
+            // por si se me va un espacio :D
+            palabras << linea.trimmed();
+        }
+    }
+    return new QStringListModel(palabras, completador);
+}

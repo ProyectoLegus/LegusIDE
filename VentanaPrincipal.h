@@ -33,6 +33,7 @@ private:
     Editor* ventanaActiva();
     bool cerrarVentanas();
     void actualizarArchivosRecientes(QString archivo);
+    QAbstractItemModel *obtenerModeloDeArchivo(QString nomArchivo, QCompleter *completador);
 
 protected:
     void keyPressEvent(QKeyEvent *);

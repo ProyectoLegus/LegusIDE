@@ -5,6 +5,7 @@
 #include <QPlainTextEdit>
 #include <QObject>
 #include <QSettings>
+#include <QCompleter>
 
 class Editor : public QPlainTextEdit
 {
@@ -30,6 +31,9 @@ public:
     int  obtenerZoomFont();
     void establecerZoomFont(int);
 
+    void establecerCompletador(QCompleter *comp);
+    QCompleter* obtenerCompletador();
+
 public slots:
     void zoomAdentro();
     void zoomAfuera();
@@ -40,12 +44,14 @@ protected:
     void closeEvent(QCloseEvent *);
     void keyPressEvent(QKeyEvent *e);
     void keyReleaseEvent(QKeyEvent *e);
+    void focusInEvent(QFocusEvent *e);
 
 private slots:
     void actualizarAnchoDelAreaDeNumeroDeLinea(int cantidadBloque);
     void colorearLineaActual();
     void actualizarAreaDeNumeroDeLinea(const QRect &rect, int dy);
     void documentoModificado();
+    void insertarCompletacion(QString completacion);
 
 private:
     QWidget *areaDeNumeroDeLinea;
@@ -54,10 +60,12 @@ private:
     int zoomFont;
     int maxZoom;
     int minZoom;
+    QCompleter *completador;
 
     void establecerArchivoActual(QString archivo);
     bool puedoGuardar();
     QString obtenerNombreArchivoCompleto(QString archivo);
+    QString textoBajoCursor();
 
 signals:
     void cambioZoomFont(int);

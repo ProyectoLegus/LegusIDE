@@ -1,7 +1,8 @@
 #include "Editor.h"
 
 Editor::Editor(QWidget *padre)
-    :QPlainTextEdit(padre)
+    :QPlainTextEdit(padre),
+     completador(0)
 {
     this->areaDeNumeroDeLinea = new AreaNumeroDeLinea(this);
 
@@ -141,39 +142,83 @@ void Editor::closeEvent(QCloseEvent *evento)
     }
 }
 
+void Editor::focusInEvent(QFocusEvent *e)
+{
+    if( completador )
+    {
+        completador->setWidget(this);
+    }
+    QPlainTextEdit::focusInEvent(e);
+}
+
 void Editor::keyPressEvent(QKeyEvent *e)
 {
-    if(e->key() == Qt::Key_Tab)
+    // Codigo para completador.!
+    if( this->completador &&
+        this->completador->popup()->isVisible())
     {
-        textCursor().insertText("    ");
-        /*Codigo para tabular texto seleccionado*/
-        /*
-        QString textoSeleccionado = textCursor().selectedText();
-        if(!textoSeleccionado.isEmpty())
+        switch(e->key())
         {
-            QStringList listaLineas = textoSeleccionado.split("\n");
-            QString textoFinal = "";
-            foreach( QString linea, listaLineas)
-            {
-                textoFinal += "\t";
-                textoFinal += linea;
-                textoFinal += "\n";
-            }
-            textCursor().insertText(textoFinal);
-
+            case Qt::Key_Enter: case Qt::Key_Return:
+            case Qt::Key_Escape: case Qt::Key_Tab:
+            case Qt::Key_Backtab:
+                e->ignore();
+                return;
+            default:
+                break;
         }
-        */
-        //QPlainTextEdit::keyPressEvent(e);
     }
-    else if( e->key() == Qt::Key_W && (e->modifiers() & Qt::ControlModifier==0))
+
+    // QSETTINEABLE -> Atajo para levantar el popup
+    bool atajo = ((e->modifiers() & Qt::ControlModifier) && e->key() == Qt::Key_Space);
+
+    if( !completador || !atajo)
     {
-        QMessageBox::about(0,"","A punto de cerrar");
-        QPlainTextEdit::keyPressEvent(e);
+        // Ejecutar los demas
+        if(e->key() == Qt::Key_Tab)
+        {
+            textCursor().insertText("    ");
+        }
+        else if( e->key() == Qt::Key_W && (e->modifiers() & Qt::ControlModifier==0))
+        {
+            QMessageBox::about(0,"","A punto de cerrar");
+            QPlainTextEdit::keyPressEvent(e);
+        }
+        else
+        {
+            QPlainTextEdit::keyPressEvent(e);
+        }
     }
-    else
+
+    bool shiftCtrl = e->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier);
+    if( !completador || ( shiftCtrl && e->text().isEmpty() ))
     {
-        QPlainTextEdit::keyPressEvent(e);
+        return;
     }
+
+    QString eow("~!@#$%^&*()_+{}|:\"<>?,./;'[]\\-=");
+    bool tieneModificador = (e->modifiers() != Qt::NoModifier) && !shiftCtrl;
+    QString prefijoDeCompletacion = textoBajoCursor();
+
+    /*Menos de 3 caracteres no auto completa*/
+    /*QSETTINEABLE*/
+    if (!atajo && (tieneModificador || e->text().isEmpty() || prefijoDeCompletacion.length() < 3
+                      || eow.contains(e->text().right(1))))
+    {
+        completador->popup()->hide();
+        return;
+    }
+
+    if( prefijoDeCompletacion != completador->completionPrefix() )
+    {
+        completador->setCompletionPrefix( prefijoDeCompletacion );
+        completador->popup()->setCurrentIndex(completador->completionModel()->index(0,0));
+    }
+
+    QRect rectaCursor = cursorRect();
+    rectaCursor.setWidth(completador->popup()->sizeHintForColumn(0) +
+                         completador->popup()->verticalScrollBar()->sizeHint().width());
+    completador->complete(rectaCursor);
 }
 
 void Editor::keyReleaseEvent(QKeyEvent *e)
@@ -369,4 +414,51 @@ void Editor::zoomAfuera()
 void Editor::zoomReinicializar()
 {
     establecerZoomFont(100);
+}
+
+void Editor::establecerCompletador(QCompleter *comp)
+{
+    if(completador)
+    {
+        QObject::disconnect(completador, 0, this, 0);
+    }
+
+    this->completador = comp;
+    if( !completador )
+    {
+        return;
+    }
+
+    this->completador->setWidget(this);
+    // QSetting
+    this->completador->setCompletionMode(QCompleter::PopupCompletion);
+    this->completador->setCaseSensitivity(Qt::CaseInsensitive);
+    this->completador->connect(completador, SIGNAL(activated(QString)),
+                               this, SLOT(insertarCompletacion(QString)));
+}
+
+QCompleter *Editor::obtenerCompletador()
+{
+    return completador;
+}
+
+void Editor::insertarCompletacion(QString completacion)
+{
+    if( completador->widget() != this)
+    {
+        return;
+    }
+    QTextCursor cursor = textCursor();
+    int extra = completacion.length() - completador->completionPrefix().length();
+    cursor.movePosition(QTextCursor::Left);
+    cursor.movePosition(QTextCursor::EndOfWord);
+    cursor.insertText(completacion.right(extra));
+    setTextCursor(cursor);
+}
+
+QString Editor::textoBajoCursor()
+{
+    QTextCursor cursor = textCursor();
+    cursor.select(QTextCursor::WordUnderCursor);
+    return cursor.selectedText();
 }

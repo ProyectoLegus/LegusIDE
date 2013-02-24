@@ -16,7 +16,8 @@ ColoreadoDeCodigoJava::ColoreadoDeCodigoJava(QTextDocument *padre)
                                  << "\\bdouble\\b" << "\\bif\\b" << "\\bfor\\b" << "\\bwhile\\b"
                                  << "\\bpublic\\b" << "\\bvoid\\b" << "\\bstatic\\b" << "\\bprivate\\b"
                                  << "\\breturn\\b" << "\\bswitch\\b" << "\\bcase\\b" << "\\belse\\b"
-                                 << "\\bdo\\b" << "\\bimport\\b" ;
+                                 << "\\bdo\\b" << "\\bimport\\b" << "\\bfloat\\b" << "\\bint\\b"
+                                 << "\\btrue\\b" << "\\bfalse\\b";
 
     foreach(const QString &patron, patronesDePalabrasReservadas)
     {

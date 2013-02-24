@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/autocompletacion">
+        <file>palabras_incorporadas.txt</file>
+    </qresource>
+</RCC>
