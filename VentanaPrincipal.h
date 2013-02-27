@@ -7,7 +7,7 @@
 #include "ColoreadoDecodigoJava.h"
 #include "Configuraciones.h"
 #include "Bienvenida.h"
-#define MAXIMO_ARCHIVOS_RECIENTES 6
+#define MAXIMO_ARCHIVOS_RECIENTES 10
 
 namespace Ui {
     class VentanaPrincipal;
@@ -76,6 +76,7 @@ private slots:
     void on_accionPestania_triggered();
     void on_accionCascada_triggered();
     void on_accionMaximizado_triggered();
+    void on_actionVista_de_4_triggered();
 };
 
 #endif // VENTANAPRINCIPAL_H
