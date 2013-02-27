@@ -336,16 +336,29 @@
     </property>
     <widget class="QMenu" name="menuVistas">
      <property name="title">
-      <string>Vistas</string>
+      <string>Visualizacion</string>
      </property>
      <addaction name="accionPestania"/>
      <addaction name="accionMaximizado"/>
      <addaction name="accionCascada"/>
     </widget>
-    <addaction name="accionVista_a_la_Par"/>
-    <addaction name="accionZoomAdentro"/>
-    <addaction name="accionZoomAfuera"/>
+    <widget class="QMenu" name="menuZoom">
+     <property name="title">
+      <string>Zoom</string>
+     </property>
+     <addaction name="accionZoomAdentro"/>
+     <addaction name="accionZoomAfuera"/>
+    </widget>
+    <widget class="QMenu" name="menuVista_Dividida">
+     <property name="title">
+      <string>Vista Dividida</string>
+     </property>
+     <addaction name="accionVista_a_la_Par"/>
+     <addaction name="actionVista_de_4"/>
+    </widget>
+    <addaction name="menuVista_Dividida"/>
     <addaction name="menuVistas"/>
+    <addaction name="menuZoom"/>
    </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuEditar"/>
@@ -719,7 +732,10 @@
   </action>
   <action name="accionVista_a_la_Par">
    <property name="text">
-    <string>Vista a la Par</string>
+    <string>Vista de 2</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+2</string>
    </property>
   </action>
   <action name="accionZoomAdentro">
@@ -756,6 +772,14 @@
   <action name="accionCascada">
    <property name="text">
     <string>Cascada</string>
+   </property>
+  </action>
+  <action name="actionVista_de_4">
+   <property name="text">
+    <string>Vista de 4</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+4</string>
    </property>
   </action>
  </widget>

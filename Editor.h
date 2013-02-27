@@ -34,6 +34,8 @@ public:
     void establecerCompletador(QCompleter *comp);
     QCompleter* obtenerCompletador();
 
+    bool tieneTitulo();
+
 public slots:
     void zoomAdentro();
     void zoomAfuera();

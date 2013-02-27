@@ -219,6 +219,10 @@ void Editor::keyPressEvent(QKeyEvent *e)
     rectaCursor.setWidth(completador->popup()->sizeHintForColumn(0) +
                          completador->popup()->verticalScrollBar()->sizeHint().width());
     completador->complete(rectaCursor);
+    QFont f = completador->popup()->font();
+    int valor = 12 * this->zoomFont / 100;
+    f.setPointSize( valor );
+    completador->popup()->setFont(f);
 }
 
 void Editor::keyReleaseEvent(QKeyEvent *e)
@@ -461,4 +465,9 @@ QString Editor::textoBajoCursor()
     QTextCursor cursor = textCursor();
     cursor.select(QTextCursor::WordUnderCursor);
     return cursor.selectedText();
+}
+
+bool Editor::tieneTitulo()
+{
+    return this->esSinTitulo;
 }

@@ -75,6 +75,7 @@ void VentanaPrincipal::closeEvent(QCloseEvent *evento)
 {
     if( !cerrarVentanas() )
     {
+        // agregar lo de qsettings
         evento->accept();
     }
     else
@@ -108,6 +109,7 @@ void VentanaPrincipal::agregarVentana(QString archivo)
             new ColoreadoDeCodigoJava(editor->document());
         }
         editor->cargarArchivo(archivo);
+        actualizarArchivosRecientes(archivo);
     }
     // CONENNE
     connect(ui->accionZoomAdentro,SIGNAL(triggered()), editor, SLOT(zoomAdentro()));
@@ -210,6 +212,7 @@ void VentanaPrincipal::on_accionSalir_triggered()
 
 void VentanaPrincipal::actualizarArchivosRecientes(QString archivo)
 {
+    ui->menuArchivos_Recientes->clear();
     QSettings configuraciones("ArchivoConfiguracion.ini",QSettings::IniFormat);
 
     QStringList archivosRecientes = configuraciones.value("ArchivosRecientes").toStringList();
@@ -376,15 +379,30 @@ void VentanaPrincipal::on_accionVista_a_la_Par_triggered()
     {
         return;
     }
-
-/*
+    ui->areaMDI->setViewMode(QMdiArea::TabbedView);
     ui->areaMDI->setViewMode(QMdiArea::SubWindowView);
-    QMdiSubWindow *ventana1 = ui->areaMDI->subWindowList().at(0);
-    QMdiSubWindow *ventana2 = ui->areaMDI->subWindowList().at(1);
+    ui->areaMDI->subWindowList().at(0)->resize(ui->areaMDI->width()/2,ui->areaMDI->height());
+    ui->areaMDI->subWindowList().at(1)->resize(ui->areaMDI->width()/2,ui->areaMDI->height());
+    ui->areaMDI->subWindowList().at(1)->move(ui->areaMDI->width()/2,0);
+}
 
-    ventana1->setGeometry( 0, 0, ui->areaMDI->x()/2,ui->areaMDI->y());
-    ventana2->setGeometry(ui->areaMDI->x()/2, 0, ui->areaMDI->x()/2, ui->areaMDI->y() );
-*/
+void VentanaPrincipal::on_actionVista_de_4_triggered()
+{
+    if( ui->areaMDI->subWindowList().size() < 4)
+    {
+        return;
+    }
+    ui->areaMDI->setViewMode(QMdiArea::TabbedView);
+    ui->areaMDI->setViewMode(QMdiArea::SubWindowView);
+    ui->areaMDI->subWindowList().at(0)->resize(ui->areaMDI->width()/2,ui->areaMDI->height()/2);
+    ui->areaMDI->subWindowList().at(1)->resize(ui->areaMDI->width()/2,ui->areaMDI->height()/2);
+    ui->areaMDI->subWindowList().at(2)->resize(ui->areaMDI->width()/2,ui->areaMDI->height()/2);
+    ui->areaMDI->subWindowList().at(3)->resize(ui->areaMDI->width()/2,ui->areaMDI->height()/2);
+
+    ui->areaMDI->subWindowList().at(0)->move(0,0);
+    ui->areaMDI->subWindowList().at(1)->move(ui->areaMDI->width()/2,0);
+    ui->areaMDI->subWindowList().at(2)->move(0, ui->areaMDI->height()/2);
+    ui->areaMDI->subWindowList().at(3)->move(ui->areaMDI->width()/2, ui->areaMDI->height()/2);
 }
 
 void VentanaPrincipal::on_accionOpciones_triggered()
@@ -455,16 +473,19 @@ void VentanaPrincipal::on_accionEjecutar_en_NXT_triggered()
 {
     ui->barraSalida->setVisible(true);
     if(ventanaActiva()==0){return;}
+    if(ventanaActiva()->tieneTitulo()){return;}
 
     /*Agregar llamada al proceso de compilacion en NXT*/
     QString path = QDir::currentPath();
     //path += "/lejos/bin/nxjc.bat";
     path += "/compilacion_windows.bat";
-
     QString archivo = ventanaActiva()->obtenerNombreArchivo();
-    QStringList argumentos = QStringList() << ventanaActiva()->obtenerFolder()
+    /*QStringList argumentos = QStringList() << ventanaActiva()->obtenerFolder()
                                            << ventanaActiva()->obtenerNombreAmigable()
                                            << ventanaActiva()->obtenerNombreSinExtension();
+    */
+    QStringList argumentos = QStringList() << ventanaActiva()->obtenerNombreAmigable()
+                                           << ventanaActiva()->obtenerFolder();
 
     procesoCompilacion.start(path, argumentos);
     connect(&procesoCompilacion, SIGNAL(readyReadStandardOutput()), this, SLOT(salidaStandard()));
