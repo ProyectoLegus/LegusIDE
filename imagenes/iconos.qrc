@@ -18,5 +18,13 @@
         <file>ejecutar_nxt.png</file>
         <file>ejecutar_pc.png</file>
         <file>logo.png</file>
+        <file>general_settings.png</file>
+        <file>text_editor.png</file>
+        <file>functions.png</file>
+        <file>github_logo.png</file>
+        <file>acercar_zoom.png</file>
+        <file>alejar_zoom.png</file>
+        <file>reestablecer_zoom.png</file>
+        <file>xml.png</file>
     </qresource>
 </RCC>

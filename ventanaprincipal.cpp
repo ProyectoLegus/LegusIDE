@@ -9,6 +9,7 @@ VentanaPrincipal::VentanaPrincipal(QString nombreArchivo, QWidget *parent) :
 
     qApp->setStyle(new QCleanlooksStyle());
     cargarConfiguraciones();
+    establecerBarraDeEstado();
     this->showMaximized();
 
     agregarVentana(nombreArchivo);
@@ -28,12 +29,17 @@ Editor* VentanaPrincipal::ventanaActiva()
 
 void VentanaPrincipal::cargarConfiguraciones()
 {
+    QSettings configuraciones("ArchivoConfiguracion.ini",QSettings::IniFormat);
+    bool vistaPestania = configuraciones.value("VistaPestania",false).toBool();
     /*Decoracion*/
 
     ui->areaMDI->setBackground(QBrush(Qt::white));
     ui->areaMDI->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->areaMDI->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    //ui->areaMDI->setViewMode(QMdiArea::TabbedView);
+    if( vistaPestania )
+    {
+        ui->areaMDI->setViewMode(QMdiArea::TabbedView);
+    }
     ui->areaMDI->setTabShape(QTabWidget::Rounded);
     /*SetTabsClosable*/
 
@@ -42,7 +48,6 @@ void VentanaPrincipal::cargarConfiguraciones()
     ui->barraSalida->setVisible(false);
 
     /*Agregar archivos Recientes*/
-    QSettings configuraciones("ArchivoConfiguracion.ini",QSettings::IniFormat);
     QStringList archivosRecientes = configuraciones.value("ArchivosRecientes").toStringList();
 
     for(int i=0; i<archivosRecientes.size(); i++)
@@ -65,10 +70,10 @@ void VentanaPrincipal::keyPressEvent(QKeyEvent *evento)
             ui->panelBuscarYReemplazar->setVisible(false);
         }
     }
-    else if( evento->key() == Qt::Key_F1)
+    /*else if( evento->key() == Qt::Key_F1)
     {
         ui->barraSalida->setVisible( !ui->barraSalida->isVisible() );
-    }
+    }*/
 }
 
 void VentanaPrincipal::closeEvent(QCloseEvent *evento)
@@ -76,6 +81,13 @@ void VentanaPrincipal::closeEvent(QCloseEvent *evento)
     if( !cerrarVentanas() )
     {
         // agregar lo de qsettings
+        QSettings configuraciones("ArchivoConfiguracion.ini",QSettings::IniFormat);
+        bool abrirBienvenida = configuraciones.value("AbrirBienvenidaAlCerrar",false).toBool();
+
+        if( abrirBienvenida )
+        {
+            (new Bienvenida(0))->show();
+        }
         evento->accept();
     }
     else
@@ -155,6 +167,14 @@ void VentanaPrincipal::on_accionGuardar_Archivo_triggered()
     if( ventanaActiva() && ventanaActiva()->guardar() )
     {
         /*Actualizar Recientes*/
+        ui->statusBar->showMessage("¡Archivo guardado exitosamente!", 2500);
+    }
+}
+
+void VentanaPrincipal::on_accionGuardar_Como_triggered()
+{
+    if( ventanaActiva() && ventanaActiva()->guardarComo())
+    {
         ui->statusBar->showMessage("¡Archivo guardado exitosamente!", 2500);
     }
 }
@@ -370,7 +390,7 @@ void VentanaPrincipal::on_accionCompilar_triggered()
 
 void VentanaPrincipal::on_accionBarra_de_Salida_triggered()
 {
-    ui->barraSalida->setVisible(true);
+    ui->barraSalida->setVisible( !ui->barraSalida->isVisible() );
 }
 
 void VentanaPrincipal::on_accionVista_a_la_Par_triggered()
@@ -473,8 +493,14 @@ void VentanaPrincipal::on_accionEjecutar_en_NXT_triggered()
 {
     ui->barraSalida->setVisible(true);
     if(ventanaActiva()==0){return;}
-    if(ventanaActiva()->tieneTitulo()){return;}
-
+    if(ventanaActiva()->tieneTitulo())
+    {
+        if( !ventanaActiva()->guardar() )
+        {
+            return;
+        }
+    }
+    ui->txtSalida->setText("");
     /*Agregar llamada al proceso de compilacion en NXT*/
     QString path = QDir::currentPath();
     //path += "/lejos/bin/nxjc.bat";
@@ -505,6 +531,33 @@ void VentanaPrincipal::on_accionEjecutar_en_PC_triggered()
 {
     ui->barraSalida->setVisible(true);
     /*Agregar llamada al proceso de compilacion en PC*/
+    ui->barraSalida->setVisible(true);
+    if(ventanaActiva()==0){return;}
+    if(ventanaActiva()->tieneTitulo())
+    {
+        if( !ventanaActiva()->guardar() )
+        {
+            return;
+        }
+    }
+
+//    ui->txtSalida->setText("");
+    /*Agregar llamada al proceso de compilacion en NXT*/
+    QString path = QDir::currentPath();
+    path += "/compilacion_windows_pc.bat";
+    QString archivo = ventanaActiva()->obtenerNombreArchivo();
+
+    QStringList argumentos = QStringList() << ventanaActiva()->obtenerNombreAmigable()
+                                           << ventanaActiva()->obtenerFolder();
+
+    procesoCompilacion.setProcessChannelMode(QProcess::SeparateChannels);
+    procesoCompilacion.start(path, argumentos);
+    connect(&procesoCompilacion, SIGNAL(readyReadStandardOutput()), this, SLOT(salidaStandard()));
+    connect(&procesoCompilacion, SIGNAL(readyReadStandardError()), this, SLOT(salidaStandardError()));
+    connect(&procesoCompilacion, SIGNAL(finished(int)), this, SLOT(compilacionTerminada()));
+
+    archivoAEjecutar = ventanaActiva()->obtenerNombreSinExtension();
+    ui->statusBar->showMessage("Compilando "+archivo, 2000);
 }
 
 void VentanaPrincipal::salidaStandard()
@@ -555,5 +608,76 @@ QAbstractItemModel* VentanaPrincipal::obtenerModeloDeArchivo(QString nomArchivo,
             palabras << linea.trimmed();
         }
     }
+    palabras.sort();
     return new QStringListModel(palabras, completador);
 }
+
+void VentanaPrincipal::on_accionInstalar_Lejos_triggered()
+{
+    QString path = QDir::currentPath();
+    path += "/flash_lejos.bat";
+
+    procesoCompilacion.start(path);
+    connect(&procesoCompilacion, SIGNAL(readyReadStandardOutput()), this, SLOT(salidaStandard()));
+    connect(&procesoCompilacion, SIGNAL(readyReadStandardError()), this, SLOT(salidaStandardError()));
+    connect(&procesoCompilacion, SIGNAL(finished(int)), this, SLOT(compilacionTerminada()));
+
+    ui->statusBar->showMessage("Instalar Lejos!", 2000);
+}
+
+void VentanaPrincipal::on_accionAcerca_Legus_triggered()
+{
+    (new Acerca(this))->show();
+}
+
+void VentanaPrincipal::on_accionImprimir_triggered()
+{
+    if( ventanaActiva() == 0){return;}
+    QTextDocument *documentoActual = ventanaActiva()->document();
+
+    QPrinter impresora;
+    QPrintDialog *dialogo = new QPrintDialog(&impresora, this);
+    if(dialogo->exec() != QDialog::Accepted)
+    {
+        return;
+    }
+
+    documentoActual->print(&impresora);
+}
+
+void VentanaPrincipal::establecerBarraDeEstado()
+{
+    reestablecerZoom = new QToolButton();
+    reestablecerZoom->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    reestablecerZoom->setIconSize(QSize(16,16));
+    reestablecerZoom->setAutoRaise(false);
+    reestablecerZoom->setDefaultAction(ui->accionReestablecerZoom);
+    reestablecerZoom->setText("100%");
+    ui->statusBar->addPermanentWidget(reestablecerZoom);
+
+    acercarZoom = new QToolButton();
+    acercarZoom->setIconSize(QSize(16,16));
+    acercarZoom->setAutoRaise(false);
+    // Magia, permite activar la accion cuando se mantiene presionado el mouse
+    acercarZoom->setAutoRepeat(true);
+    acercarZoom->setDefaultAction(ui->accionZoomAdentro);
+    acercarZoom->setText("");
+    ui->statusBar->addPermanentWidget(acercarZoom);
+
+    alejarZoom = new QToolButton();
+    alejarZoom->setIconSize(QSize(16,16));
+    alejarZoom->setAutoRaise(false);
+    // Magia, permite activar la accion cuando se mantiene presionado el mouse
+    alejarZoom->setAutoRepeat(true);
+    alejarZoom->setDefaultAction(ui->accionZoomAfuera);
+    alejarZoom->setText("");
+    ui->statusBar->addPermanentWidget(alejarZoom);
+}
+
+void VentanaPrincipal::on_accionReestablecerZoom_triggered()
+{
+    if(ventanaActiva()==0){return;}
+
+    ventanaActiva()->zoomReinicializar();
+}
+

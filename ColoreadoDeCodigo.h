@@ -5,6 +5,7 @@
 #include <QTextCharFormat>
 #include <QSettings>
 #include <QBrush>
+#include <QDebug>
 
 QT_BEGIN_NAMESPACE
     class QTextDocument;

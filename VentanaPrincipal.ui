@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>VentanaPrincipal</string>
+   <string>Legus IDE</string>
   </property>
   <property name="windowIcon">
    <iconset resource="imagenes/iconos.qrc">
@@ -291,6 +291,7 @@
     <addaction name="accionSeleccionar_Todo"/>
     <addaction name="accionAvanzados"/>
     <addaction name="accionIr_A_Linea"/>
+    <addaction name="accionOpciones"/>
    </widget>
    <widget class="QMenu" name="menuPrograma">
     <property name="title">
@@ -320,14 +321,13 @@
      <string>Herramientas</string>
     </property>
     <addaction name="accionBarra_de_Salida"/>
-    <addaction name="separator"/>
-    <addaction name="accionOpciones"/>
+    <addaction name="accionInstalar_Lejos"/>
    </widget>
    <widget class="QMenu" name="menuAyuda">
     <property name="title">
      <string>Ayuda</string>
     </property>
-    <addaction name="accionAcerca_de_Legus"/>
+    <addaction name="accionManual_de_Legus"/>
     <addaction name="accionAcerca_Legus"/>
    </widget>
    <widget class="QMenu" name="menuVista">
@@ -404,6 +404,11 @@
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
       <widget class="QTextEdit" name="txtSalida">
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
        <property name="autoFormatting">
         <set>QTextEdit::AutoBulletList</set>
        </property>
@@ -412,6 +417,13 @@
        </property>
        <property name="readOnly">
         <bool>true</bool>
+       </property>
+       <property name="html">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;Salida&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
@@ -695,7 +707,7 @@
     <string>Insertar Bloque Utilizar</string>
    </property>
   </action>
-  <action name="accionAcerca_de_Legus">
+  <action name="accionManual_de_Legus">
    <property name="text">
     <string>Manual de Legus</string>
    </property>
@@ -729,6 +741,9 @@
    <property name="text">
     <string>Barra de Salida</string>
    </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
   </action>
   <action name="accionVista_a_la_Par">
    <property name="text">
@@ -739,6 +754,10 @@
    </property>
   </action>
   <action name="accionZoomAdentro">
+   <property name="icon">
+    <iconset resource="imagenes/iconos.qrc">
+     <normaloff>:/acercar_zoom.png</normaloff>:/acercar_zoom.png</iconset>
+   </property>
    <property name="text">
     <string>Zoom +</string>
    </property>
@@ -747,6 +766,10 @@
    </property>
   </action>
   <action name="accionZoomAfuera">
+   <property name="icon">
+    <iconset resource="imagenes/iconos.qrc">
+     <normaloff>:/alejar_zoom.png</normaloff>:/alejar_zoom.png</iconset>
+   </property>
    <property name="text">
     <string>Zoom -</string>
    </property>
@@ -780,6 +803,20 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+4</string>
+   </property>
+  </action>
+  <action name="accionInstalar_Lejos">
+   <property name="text">
+    <string>Instalar Lejos en NXT</string>
+   </property>
+  </action>
+  <action name="accionReestablecerZoom">
+   <property name="icon">
+    <iconset resource="imagenes/iconos.qrc">
+     <normaloff>:/reestablecer_zoom.png</normaloff>:/reestablecer_zoom.png</iconset>
+   </property>
+   <property name="text">
+    <string>reestablecerZoom</string>
    </property>
   </action>
  </widget>

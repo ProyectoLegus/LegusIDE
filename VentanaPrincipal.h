@@ -7,6 +7,8 @@
 #include "ColoreadoDecodigoJava.h"
 #include "Configuraciones.h"
 #include "Bienvenida.h"
+#include "Acerca.h"
+
 #define MAXIMO_ARCHIVOS_RECIENTES 10
 
 namespace Ui {
@@ -28,6 +30,11 @@ private:
     QProcess procesoEjecucion;
     QString archivoAEjecutar;
 
+    QToolButton* reestablecerZoom;
+    QToolButton* acercarZoom;
+    QToolButton* alejarZoom;
+
+    void establecerBarraDeEstado();
     void cargarConfiguraciones();
     void agregarVentana(QString archivo="");
     Editor* ventanaActiva();
@@ -77,6 +84,11 @@ private slots:
     void on_accionCascada_triggered();
     void on_accionMaximizado_triggered();
     void on_actionVista_de_4_triggered();
+    void on_accionInstalar_Lejos_triggered();
+    void on_accionAcerca_Legus_triggered();
+    void on_accionImprimir_triggered();
+    void on_accionReestablecerZoom_triggered();
+    void on_accionGuardar_Como_triggered();
 };
 
 #endif // VENTANAPRINCIPAL_H

@@ -12,17 +12,22 @@ Editor::Editor(QWidget *padre)
 
     actualizarAnchoDelAreaDeNumeroDeLinea(0);
     colorearLineaActual();
-
     /*Tamaño del Tabulador*/
-    setTabStopWidth(20);
-
-    /*Letra, deberia venir de configuracion*/
-    setFont(QFont("courier",13));
+    //setTabStopWidth(20);
 
     QSettings configuraciones("ConfiguracionDeColoreado", QSettings::IniFormat);
+
+    /*Letra, deberia venir de configuracion*/
+    QFont f = configuraciones.value("Fuente",QFont("courier")).value<QFont>();
+    int tamanio = configuraciones.value("FuenteTamanio",13).toInt();
+
+    f.setPointSize(tamanio);
+    setFont(f);
+
     QPalette p = palette();
     QColor colorSeleccion = configuraciones.value("ColorSeleccion",QColor(Qt::blue).lighter(160)).value<QColor>();
     p.setColor(QPalette::Highlight, colorSeleccion);
+    p.setColor(QPalette::Background, Qt::gray);
     setPalette(p);
 
     this->maxZoom = 500;
@@ -119,6 +124,34 @@ void Editor::areaNumeroDeLineaPaintEvent(QPaintEvent *evento)
         top = bottom;
         bottom = top + (int) blockBoundingRect(block).height();
         ++blockNumber;
+    }
+    // Update Intellisense
+    if(blockNumber > 0)
+    {
+        /*
+        QTextBlock bloque = document()->findBlockByNumber(blockNumber-1);
+        QString text = bloque.text();
+
+        QStringList lista = text.split(" ");
+
+        QStringListModel *model = (QStringListModel*)completador->model();
+        QStringList list = model->stringList();
+
+        list.append(lista);
+        list.removeDuplicates();
+        list.removeAll(" ");
+        list.removeAll("");
+        list.sort();
+
+        model->setStringList(list);
+
+
+        QStringListModel *nModel = new QStringListModel(list, completador);
+
+        if( this->completador != 0)
+        {
+            this->completador->setModel(nModel);
+        }*/
     }
 }
 
