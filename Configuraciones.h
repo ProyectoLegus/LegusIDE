@@ -10,6 +10,8 @@
 #include <QFileDialog>
 
 #include <QMessageBox>
+#include <QTreeWidgetItem>
+
 namespace Ui {
     class Configuraciones;
 }
